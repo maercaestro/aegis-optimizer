@@ -1,0 +1,128 @@
+{
+    "plant_details": {
+      "capacity_bpd": 100000,
+      "base_crude_capacity_bpd": 87000
+    },
+    "crude_grades": [
+      { "grade": "Base", "origin": "PM" },
+      { "grade": "A", "origin": "PM" },
+      { "grade": "B", "origin": "PM" },
+      { "grade": "C", "origin": "PM" },
+      { "grade": "D", "origin": "Sabah" },
+      { "grade": "E", "origin": "Sabah" },
+      { "grade": "F", "origin": "Sarawak" }
+    ],
+    "crude_pairings_blending": [
+      { "grade": "Base", "paired_with": "-", "capacity_bpd": 87000, "pairing_ratio": "100" },
+      { "grade": "A", "paired_with": "Base", "capacity_bpd": 96000, "pairing_ratio": "27:73" },
+      { "grade": "B", "paired_with": "Base", "capacity_bpd": 95000, "pairing_ratio": "27:73" },
+      { "grade": "C", "paired_with": "D", "capacity_bpd": 96000, "pairing_ratio": "60:40" },
+      { "grade": "D", "paired_with": "Base", "capacity_bpd": 95000, "pairing_ratio": "27:73" },
+      { "grade": "E", "paired_with": "-", "capacity_bpd": 95000, "pairing_ratio": "100" },
+      { "grade": "F", "paired_with": "-", "capacity_bpd": 95000, "pairing_ratio": "100" }
+    ],
+    "tanks": [
+      { "tank_name": "Tank 1", "capacity": 250 },
+      { "tank_name": "Tank 2", "capacity": 250 },
+      { "tank_name": "Tank 3", "capacity": 250 },
+      { "tank_name": "Tank 4", "capacity": 250 },
+      { "tank_name": "Tank 5", "capacity": 180 }
+    ],
+    "opening_inventory": [
+      { "grade": "Base", "volume": 250, "tank": "Tank 1" },
+      { "grade": "Base", "volume": 100, "tank": "Tank 2" },
+      { "grade": "A", "volume": 0, "tank": null },
+      { "grade": "B", "volume": 150, "tank": "Tank 3" },
+      { "grade": "C", "volume": 150, "tank": "Tank 4" },
+      { "grade": "D", "volume": 100, "tank": "Tank 5" },
+      { "grade": "E", "volume": 0, "tank": null },
+      { "grade": "F", "volume": 250, "tank": "Tank 2" },
+      { "grade": "F", "volume": 50, "tank": "Tank 3" }
+    ],
+    "time_of_travel_days": [
+      { "route": "PM to Melaka", "days": 2 },
+      { "route": "Sabah to Melaka", "days": 3.5 },
+      { "route": "Sabah to PM", "days": 3 },
+      { "route": "Sabah to Sarawak", "days": 1 },
+      { "route": "Sarawak to Melaka", "days": 3 },
+      { "route": "Sarawak to Sabah", "days": 1 },
+      { "route": "Sarawak to PM", "days": 2.5 }
+    ],
+    "margin_usd_per_bbl_oct": [
+      { "grade": "Base", "margin": 15.85 },
+      { "grade": "A", "margin": 18.47 },
+      { "grade": "B", "margin": 15.71 },
+      { "grade": "C", "margin": 19.24 },
+      { "grade": "D", "margin": 11.19 },
+      { "grade": "E", "margin": 9.98 },
+      { "grade": "F", "margin": 9.97 }
+    ],
+    "maximum_inventory": {
+      "tanks": [
+        { "tank_name": "Tank 1", "capacity": 250 },
+        { "tank_name": "Tank 2", "capacity": 250 },
+        { "tank_name": "Tank 3", "capacity": 250 },
+        { "tank_name": "Tank 4", "capacity": 250 },
+        { "tank_name": "Tank 5", "capacity": 180 }
+      ],
+      "volume": 1180
+    },
+    "other_info": {
+      "cargo_discharge_days": 2,
+      "tank_preparation_days": 3,
+      "maximum_delivery_per_month": 6
+    },
+    "feedstock_delivery_program": [
+      {
+        "grade": "Base",
+        "volume_kb": 760,
+        "ldr": ["1-3 Oct", "17-19 Oct"],
+        "parcel_sizes_kb": [400, 360]
+      },
+      {
+        "grade": "A",
+        "volume_kb": 150,
+        "ldr": ["1-3 Oct"],
+        "parcel_sizes_kb": [150]
+      },
+      {
+        "grade": "B",
+        "volume_kb": 150,
+        "ldr": ["8-10 Oct"],
+        "parcel_sizes_kb": [150]
+      },
+      {
+        "grade": "C",
+        "volume_kb": 200,
+        "ldr": ["17-19 Oct"],
+        "parcel_sizes_kb": [200]
+      },
+      {
+        "grade": "D",
+        "volume_kb": 150,
+        "ldr": ["23-24 Oct"],
+        "parcel_sizes_kb": [150]
+      },
+      {
+        "grade": "E",
+        "volume_kb": 900,
+        "ldr": ["5-7 Oct", "10-11 Oct", "23-24 Oct"],
+        "parcel_sizes_kb": [250, 550, 100]
+      },
+      {
+        "grade": "F",
+        "volume_kb": 600,
+        "ldr": ["5-7 Oct", "19-22 Oct"],
+        "parcel_sizes_kb": [320, 280]
+      }
+    ],
+    "delivery_constraints": {
+      "max_volume_per_vessel": {
+        "two_grades": 700,
+        "three_grades": 650
+      },
+      "max_delivery_per_month": 6,
+      "freight_cost_usd": 600000,
+      "freight_note": "no additional freight cost up to 5 deliveries per month"
+    }
+  }
