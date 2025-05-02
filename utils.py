@@ -102,14 +102,16 @@ def calculate_processing_rates(inventory, pairings, plant_capacity, margins):
         reverse=True  # Highest margin first
     )
     
-    # Process paired grades first
+    # Initialize remaining capacity
     remaining_capacity = plant_capacity_kbpd
     
-    # First process blends with highest margin
-    for pairing in sorted_pairings:
-        if remaining_capacity <= 0:
-            break
-            
+    # Flag to track if we've processed a recipe already
+    recipe_processed = False
+    
+    # First try to process a paired blend (highest margin first)
+    if sorted_pairings and not recipe_processed:
+        # Take only the highest margin pairing
+        pairing = sorted_pairings[0]
         primary_grade = pairing["primary_grade"]
         secondary_grade = pairing["secondary_grade"]
         ratio = pairing["ratio"]
@@ -118,79 +120,63 @@ def calculate_processing_rates(inventory, pairings, plant_capacity, margins):
         max_capacity = min(pairing["capacity_kbpd"], remaining_capacity)
         
         # Check inventories
-        if inventory_copy[primary_grade] <= 0 or inventory_copy[secondary_grade] <= 0:
-            continue
+        if inventory_copy[primary_grade] > 0 and inventory_copy[secondary_grade] > 0:
+            # Calculate how much we can process based on both inventories
+            # Inventory is already in kb (thousand barrels)
+            max_primary = min(inventory_copy[primary_grade], max_capacity * ratio[0])
+            max_secondary = min(inventory_copy[secondary_grade], max_capacity * ratio[1])
             
-        # Calculate how much we can process based on both inventories
-        # Inventory is already in kb (thousand barrels)
-        max_primary = min(inventory_copy[primary_grade], max_capacity * ratio[0])
-        max_secondary = min(inventory_copy[secondary_grade], max_capacity * ratio[1])
-        
-        # Find limiting factor
-        if max_primary / ratio[0] < max_secondary / ratio[1]:
-            # Primary crude is limiting
-            process_primary = max_primary
-            process_secondary = process_primary * ratio[1] / ratio[0]
-        else:
-            # Secondary crude is limiting
-            process_secondary = max_secondary
-            process_primary = process_secondary * ratio[0] / ratio[1]
-        
-        # Ensure we don't exceed capacity
-        total_process = process_primary + process_secondary
-        if total_process > max_capacity:
-            scale_factor = max_capacity / total_process
-            process_primary *= scale_factor
-            process_secondary *= scale_factor
-            total_process = max_capacity
-        
-        # Update processing rates
-        processing_rates[primary_grade] += process_primary
-        processing_rates[secondary_grade] += process_secondary
-        
-        # Update inventory
-        inventory_copy[primary_grade] -= process_primary
-        inventory_copy[secondary_grade] -= process_secondary
-        
-        # Update remaining capacity
-        remaining_capacity -= total_process
-        
-        # Record blending details
-        blending_details.append({
-            "primary_grade": primary_grade,
-            "secondary_grade": secondary_grade,
-            "primary_rate": process_primary,
-            "secondary_rate": process_secondary,
-            "total_rate": total_process,
-            "ratio": f"{ratio[0]:.2f}:{ratio[1]:.2f}",
-            "capacity_used": total_process,
-            "capacity_limit": pairing["capacity_kbpd"]
-        })
+            # Find limiting factor
+            if max_primary / ratio[0] < max_secondary / ratio[1]:
+                # Primary crude is limiting
+                process_primary = max_primary
+                process_secondary = process_primary * ratio[1] / ratio[0]
+            else:
+                # Secondary crude is limiting
+                process_secondary = max_secondary
+                process_primary = process_secondary * ratio[0] / ratio[1]
+            
+            # Ensure we don't exceed capacity
+            total_process = process_primary + process_secondary
+            if total_process > max_capacity:
+                scale_factor = max_capacity / total_process
+                process_primary *= scale_factor
+                process_secondary *= scale_factor
+                total_process = max_capacity
+            
+            if total_process > 0:
+                # Update processing rates
+                processing_rates[primary_grade] += process_primary
+                processing_rates[secondary_grade] += process_secondary
+                
+                # Update inventory
+                inventory_copy[primary_grade] -= process_primary
+                inventory_copy[secondary_grade] -= process_secondary
+                
+                # Update remaining capacity
+                remaining_capacity -= total_process
+                
+                # Record blending details
+                blending_details.append({
+                    "primary_grade": primary_grade,
+                    "secondary_grade": secondary_grade,
+                    "primary_rate": process_primary,
+                    "secondary_rate": process_secondary,
+                    "total_rate": total_process,
+                    "ratio": f"{ratio[0]:.2f}:{ratio[1]:.2f}",
+                    "capacity_used": total_process,
+                    "capacity_limit": pairing["capacity_kbpd"]
+                })
+                
+                recipe_processed = True
     
-    # Process solo grades with highest margin
-    for grade in sorted_grades:
-        if remaining_capacity <= 0:
-            break
-            
-        # Skip if inventory depleted
-        if inventory_copy[grade] <= 0:
-            continue
-            
+    # If no paired recipe was processed and we still have capacity, use solo grades
+    if not recipe_processed and sorted_grades and remaining_capacity > 0:
+        # Take the highest margin grade available
+        grade = sorted_grades[0]
+        
         # Get pairing info
         pairing_info = pairings.get(grade, {})
-        paired_with = pairing_info.get("paired_with")
-        
-        # Skip paired grades that we've already processed
-        if paired_with:
-            # Check if this pairing was already processed
-            already_processed = False
-            for blend in blending_details:
-                if (blend["primary_grade"] == grade or blend["secondary_grade"] == grade):
-                    already_processed = True
-                    break
-                    
-            if already_processed:
-                continue
         
         # Convert capacity_bpd to kbpd
         capacity_kbpd = pairing_info.get("capacity_bpd", plant_capacity) / 1000
@@ -201,25 +187,28 @@ def calculate_processing_rates(inventory, pairings, plant_capacity, margins):
         # Process only what's available in inventory, up to max capacity
         process_rate = min(inventory_copy[grade], max_capacity)
         
-        # Update processing rate
-        processing_rates[grade] += process_rate
-        
-        # Update inventory
-        inventory_copy[grade] -= process_rate
-        
-        # Update remaining capacity
-        remaining_capacity -= process_rate
-        
-        # Record blending details for solo processing
-        blending_details.append({
-            "primary_grade": grade,
-            "secondary_grade": None,
-            "primary_rate": process_rate,
-            "secondary_rate": 0,
-            "total_rate": process_rate,
-            "ratio": "1.00:0.00",
-            "capacity_used": process_rate,
-            "capacity_limit": capacity_kbpd
-        })
+        if process_rate > 0:
+            # Update processing rate
+            processing_rates[grade] += process_rate
+            
+            # Update inventory
+            inventory_copy[grade] -= process_rate
+            
+            # Update remaining capacity
+            remaining_capacity -= process_rate
+            
+            # Record blending details for solo processing
+            blending_details.append({
+                "primary_grade": grade,
+                "secondary_grade": None,
+                "primary_rate": process_rate,
+                "secondary_rate": 0,
+                "total_rate": process_rate,
+                "ratio": "1.00:0.00",
+                "capacity_used": process_rate,
+                "capacity_limit": capacity_kbpd
+            })
+            
+            recipe_processed = True
     
     return processing_rates, blending_details

@@ -37,9 +37,13 @@ class SimpleScheduler:
         self.time_of_travel = {item["route"]: item["days"] for item in input_data["time_of_travel_days"]}
         self.num_days = input_data["processing_dates"]["days"]
         
-    def generate_schedule(self):
+    def generate_schedule(self, optimized_vessels=None):
         """
         Generate a refinery schedule based on input data and constraints.
+        
+        Args:
+            optimized_vessels (list, optional): List of optimized vessels from vessel_optimizer.
+                If provided, these vessels will be used instead of the default plan.
         
         Returns:
             dict: Schedule containing daily plan and vessel arrivals
@@ -50,15 +54,21 @@ class SimpleScheduler:
         schedule = {
             "daily_plan": {},
             "vessel_arrivals": [],
-            "held_vessels": []  # Track vessels that are held due to insufficient ullage
+            "held_vessels": [],  # Track vessels that are held due to insufficient ullage
+            "deferred_vessels": []  # Track vessels that are deferred beyond simulation horizon
         }
         
         # Initialize inventory with opening inventory
         inventory = dict(self.opening_inventory)
         current_tanks = {name: dict(data) for name, data in self.tanks.items()}
         
-        # Plan vessel arrivals based on LDRs
-        planned_vessel_arrivals = self._plan_vessel_arrivals()
+        # Plan vessel arrivals - either use optimized vessels or generate from LDRs
+        if optimized_vessels:
+            logger.info("Using optimized vessels for scheduling")
+            planned_vessel_arrivals = optimized_vessels
+        else:
+            logger.info("Using default vessel planning from LDRs")
+            planned_vessel_arrivals = self._plan_vessel_arrivals()
         
         # Keep track of held vessels that need to be checked on future days
         pending_vessels = []
@@ -93,8 +103,18 @@ class SimpleScheduler:
                     # If there's any overflow, the vessel can't berth
                     if any(alloc["tank"] == "OVERFLOW" for alloc in allocation_results):
                         can_berth = False
-                        # Save allocation simulation for reporting
-                        cargo["simulated_allocation"] = allocation_results
+                        
+                        # Calculate overflow amount for reporting
+                        overflow_amount = sum(alloc["volume"] for alloc in allocation_results 
+                                             if alloc["tank"] == "OVERFLOW")
+                        
+                        # Only store the regular tank allocations (remove OVERFLOW)
+                        valid_allocations = [alloc for alloc in allocation_results 
+                                            if alloc["tank"] != "OVERFLOW"]
+                        
+                        # Save allocation simulation for reporting but exclude OVERFLOW entries
+                        cargo["simulated_allocation"] = valid_allocations
+                        cargo["overflow_amount"] = overflow_amount
                     else:
                         vessel_allocations.append((cargo, allocation_results))
                 
@@ -137,7 +157,7 @@ class SimpleScheduler:
                         # If we've reached the end of the simulation horizon and the vessel is still held
                         vessel["held_reason"] = "Insufficient ullage until end of simulation horizon"
                         vessel["earliest_possible_day"] = "Beyond simulation horizon"
-                        schedule["held_vessels"].append(vessel)
+                        schedule["deferred_vessels"].append(vessel)
             
             # Update the schedule with the vessels that actually arrived
             schedule["vessel_arrivals"].extend(actual_arrivals)
@@ -178,7 +198,10 @@ class SimpleScheduler:
         for vessel in pending_vessels:
             vessel["held_reason"] = "Insufficient ullage until end of simulation horizon"
             vessel["earliest_possible_day"] = "Beyond simulation horizon"
-            schedule["held_vessels"].append(vessel)
+            schedule["deferred_vessels"].append(vessel)
+        
+        # Add deferred vessels to the held_vessels list for backward compatibility
+        schedule["held_vessels"] = schedule["deferred_vessels"]
         
         return schedule
     
@@ -340,11 +363,9 @@ class SimpleScheduler:
         
         # Check if we couldn't allocate all the volume
         if remaining_volume > 0:
+            # We don't add OVERFLOW to the actual allocations anymore
+            # Instead, we'll defer the vessel (handled in generate_schedule)
             logger.warning(f"Could not allocate {remaining_volume} kb of {grade} due to tank capacity constraints")
-            allocations.append({
-                "tank": "OVERFLOW",
-                "volume": remaining_volume
-            })
         
         return allocations
     
@@ -482,9 +503,9 @@ class SimpleScheduler:
                         
                         remaining_volume -= allocated
         
-        # Check if we couldn't allocate all the volume
+        # If we still have unallocated volume, it's overflow
         if remaining_volume > 0:
-            # Mark as overflow - this means there's not enough ullage
+            # Mark as overflow - this is used to signal that the vessel can't berth
             allocations.append({
                 "tank": "OVERFLOW",
                 "volume": remaining_volume
