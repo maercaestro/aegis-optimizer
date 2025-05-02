@@ -165,7 +165,14 @@ def print_schedule(schedule, vessel_optimization=None):
 
 def save_schedule(schedule, vessel_optimization=None):
     """Save the schedule to a JSON file."""
-    output_file = f"data/schedule_output_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    # Create timestamp for the filename
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    
+    # Timestamped output file
+    output_file = f"data/schedule_output_{timestamp}.json"
+    
+    # Fixed output file (always overwritten with latest)
+    fixed_output_file = "data/latest_schedule_output.json"
     
     # Add vessel optimization results if available
     if vessel_optimization:
@@ -174,9 +181,17 @@ def save_schedule(schedule, vessel_optimization=None):
             "freight_cost": vessel_optimization["freight_cost"]
         }
     
+    # Save to timestamped file
     with open(output_file, 'w') as f:
         json.dump(schedule, f, indent=2)
-    logger.info(f"Schedule saved to {output_file}")
+    
+    # Also save to fixed filename (will overwrite any existing file)
+    with open(fixed_output_file, 'w') as f:
+        json.dump(schedule, f, indent=2)
+    
+    logger.info(f"Schedule saved to {output_file} and {fixed_output_file}")
+    
+    return output_file
 
 if __name__ == "__main__":
     main()

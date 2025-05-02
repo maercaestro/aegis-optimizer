@@ -2,45 +2,35 @@
   "daily_plan": {
     "1": {
       "processing_rates": {
-        "Base": 2.92,
+        "Base": 95.0,
         "A": 0,
-        "B": 1.08,
-        "C": 57.599999999999994,
-        "D": 38.4,
+        "B": 0,
+        "C": 0,
+        "D": 0,
         "E": 0,
         "F": 0
       },
       "blending_details": [
         {
-          "primary_grade": "C",
-          "secondary_grade": "D",
-          "primary_rate": 57.599999999999994,
-          "secondary_rate": 38.4,
-          "total_rate": 96.0,
-          "ratio": "0.60:0.40",
-          "capacity_used": 96.0,
-          "capacity_limit": 96.0
-        },
-        {
-          "primary_grade": "B",
-          "secondary_grade": "Base",
-          "primary_rate": 1.08,
-          "secondary_rate": 2.92,
-          "total_rate": 4.0,
-          "ratio": "0.27:0.73",
-          "capacity_used": 4.0,
+          "primary_grade": "Base",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
           "capacity_limit": 95.0
         }
       ],
-      "inventory": 950.0,
+      "inventory": 859.0,
       "inventory_by_grade": {
-        "Base": 347.08,
+        "Base": 255.0,
         "A": 0,
-        "B": 148.92,
+        "B": 150.0,
         "C": 92.4,
         "D": 61.6,
         "E": 0,
-        "F": 300
+        "F": 300.0
       },
       "tanks": {
         "Tank 1": {
@@ -48,7 +38,7 @@
           "contents": [
             {
               "grade": "Base",
-              "volume": 247.08
+              "volume": 250
             }
           ]
         },
@@ -70,7 +60,7 @@
           "contents": [
             {
               "grade": "B",
-              "volume": 148.92
+              "volume": 150
             },
             {
               "grade": "F",
@@ -100,45 +90,289 @@
     },
     "2": {
       "processing_rates": {
-        "Base": 70.08,
-        "A": 25.92,
-        "B": 0,
-        "C": 2.4,
-        "D": 1.6,
+        "Base": 0,
+        "A": 0,
+        "B": 95.0,
+        "C": 0,
+        "D": 0,
         "E": 0,
         "F": 0
       },
       "blending_details": [
         {
-          "primary_grade": "A",
-          "secondary_grade": "Base",
-          "primary_rate": 25.92,
-          "secondary_rate": 70.08,
-          "total_rate": 96.0,
-          "ratio": "0.27:0.73",
-          "capacity_used": 96.0,
-          "capacity_limit": 96.0
+          "primary_grade": "B",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 764.0,
+      "inventory_by_grade": {
+        "Base": 255.0,
+        "A": 0,
+        "B": 55.0,
+        "C": 92.4,
+        "D": 61.6,
+        "E": 0,
+        "F": 300.0
+      },
+      "tanks": {
+        "Tank 1": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "Base",
+              "volume": 250
+            }
+          ]
         },
+        "Tank 2": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "Base",
+              "volume": 100
+            },
+            {
+              "grade": "F",
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 3": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "B",
+              "volume": 150
+            },
+            {
+              "grade": "F",
+              "volume": 50
+            }
+          ]
+        },
+        "Tank 4": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "C",
+              "volume": 34.80000000000001
+            }
+          ]
+        },
+        "Tank 5": {
+          "capacity": 180,
+          "contents": [
+            {
+              "grade": "D",
+              "volume": 23.200000000000003
+            }
+          ]
+        }
+      }
+    },
+    "3": {
+      "processing_rates": {
+        "Base": 0,
+        "A": 0,
+        "B": 0,
+        "C": 57.599999999999994,
+        "D": 38.400000000000006,
+        "E": 0,
+        "F": 0
+      },
+      "blending_details": [
         {
           "primary_grade": "C",
           "secondary_grade": "D",
-          "primary_rate": 2.4,
-          "secondary_rate": 1.6,
-          "total_rate": 4.0,
+          "primary_rate": 57.599999999999994,
+          "secondary_rate": 38.400000000000006,
+          "total_rate": 96.0,
           "ratio": "0.60:0.40",
-          "capacity_used": 4.0,
+          "capacity_used": 96.0,
           "capacity_limit": 96.0
         }
       ],
-      "inventory": 1399.9999999999998,
+      "inventory": 668.0,
       "inventory_by_grade": {
-        "Base": 676.9999999999999,
-        "A": 124.08,
-        "B": 148.92,
-        "C": 90.0,
-        "D": 60.0,
+        "Base": 255.0,
+        "A": 0,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
         "E": 0,
-        "F": 300
+        "F": 300.0
+      },
+      "tanks": {
+        "Tank 1": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "Base",
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 2": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "Base",
+              "volume": 100
+            },
+            {
+              "grade": "F",
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 3": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "B",
+              "volume": 150
+            },
+            {
+              "grade": "F",
+              "volume": 50
+            }
+          ]
+        },
+        "Tank 4": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "C",
+              "volume": 7.105427357601002e-15
+            }
+          ]
+        },
+        "Tank 5": {
+          "capacity": 180,
+          "contents": []
+        }
+      }
+    },
+    "4": {
+      "processing_rates": {
+        "Base": 95.0,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "blending_details": [
+        {
+          "primary_grade": "Base",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 573.0,
+      "inventory_by_grade": {
+        "Base": 160.0,
+        "A": 0,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 0,
+        "F": 300.0
+      },
+      "tanks": {
+        "Tank 1": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "Base",
+              "volume": 180.65
+            }
+          ]
+        },
+        "Tank 2": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "Base",
+              "volume": 100
+            },
+            {
+              "grade": "F",
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 3": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "B",
+              "volume": 124.35
+            },
+            {
+              "grade": "F",
+              "volume": 50
+            }
+          ]
+        },
+        "Tank 4": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "C",
+              "volume": 7.105427357601002e-15
+            }
+          ]
+        },
+        "Tank 5": {
+          "capacity": 180,
+          "contents": []
+        }
+      }
+    },
+    "5": {
+      "processing_rates": {
+        "Base": 95.0,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "blending_details": [
+        {
+          "primary_grade": "Base",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 1028.0,
+      "inventory_by_grade": {
+        "Base": 465.0,
+        "A": 150.0,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 0,
+        "F": 300.0
       },
       "tanks": {
         "Tank 1": {
@@ -168,7 +402,7 @@
           "contents": [
             {
               "grade": "B",
-              "volume": 148.92
+              "volume": 124.35
             },
             {
               "grade": "F",
@@ -181,7 +415,7 @@
           "contents": [
             {
               "grade": "C",
-              "volume": 90.0
+              "volume": 7.105427357601002e-15
             }
           ]
         },
@@ -189,20 +423,20 @@
           "capacity": 180,
           "contents": [
             {
-              "grade": "D",
-              "volume": 60.0
+              "grade": "Base",
+              "volume": 180
             }
           ]
         }
       }
     },
-    "3": {
+    "6": {
       "processing_rates": {
         "Base": 70.08,
         "A": 25.92,
         "B": 0,
-        "C": 2.4,
-        "D": 1.6,
+        "C": 0,
+        "D": 0,
         "E": 0,
         "F": 0
       },
@@ -216,27 +450,17 @@
           "ratio": "0.27:0.73",
           "capacity_used": 96.0,
           "capacity_limit": 96.0
-        },
-        {
-          "primary_grade": "C",
-          "secondary_grade": "D",
-          "primary_rate": 2.4,
-          "secondary_rate": 1.6,
-          "total_rate": 4.0,
-          "ratio": "0.60:0.40",
-          "capacity_used": 4.0,
-          "capacity_limit": 96.0
         }
       ],
-      "inventory": 1299.9999999999998,
+      "inventory": 932.0,
       "inventory_by_grade": {
-        "Base": 606.9199999999998,
-        "A": 98.16,
-        "B": 148.92,
-        "C": 87.6,
-        "D": 58.4,
+        "Base": 394.92,
+        "A": 124.08,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
         "E": 0,
-        "F": 300
+        "F": 300.0
       },
       "tanks": {
         "Tank 1": {
@@ -266,7 +490,7 @@
           "contents": [
             {
               "grade": "B",
-              "volume": 148.92
+              "volume": 124.35
             },
             {
               "grade": "F",
@@ -279,7 +503,7 @@
           "contents": [
             {
               "grade": "C",
-              "volume": 87.6
+              "volume": 7.105427357601002e-15
             }
           ]
         },
@@ -287,20 +511,20 @@
           "capacity": 180,
           "contents": [
             {
-              "grade": "D",
-              "volume": 58.4
+              "grade": "Base",
+              "volume": 180
             }
           ]
         }
       }
     },
-    "4": {
+    "7": {
       "processing_rates": {
         "Base": 70.08,
         "A": 25.92,
         "B": 0,
-        "C": 2.4,
-        "D": 1.6,
+        "C": 0,
+        "D": 0,
         "E": 0,
         "F": 0
       },
@@ -314,27 +538,17 @@
           "ratio": "0.27:0.73",
           "capacity_used": 96.0,
           "capacity_limit": 96.0
-        },
-        {
-          "primary_grade": "C",
-          "secondary_grade": "D",
-          "primary_rate": 2.4,
-          "secondary_rate": 1.6,
-          "total_rate": 4.0,
-          "ratio": "0.60:0.40",
-          "capacity_used": 4.0,
-          "capacity_limit": 96.0
         }
       ],
-      "inventory": 1199.9999999999998,
+      "inventory": 836.0,
       "inventory_by_grade": {
-        "Base": 536.8399999999998,
-        "A": 72.24,
-        "B": 148.92,
-        "C": 85.19999999999999,
-        "D": 56.8,
+        "Base": 324.84,
+        "A": 98.16,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
         "E": 0,
-        "F": 300
+        "F": 300.0
       },
       "tanks": {
         "Tank 1": {
@@ -364,7 +578,7 @@
           "contents": [
             {
               "grade": "B",
-              "volume": 148.92
+              "volume": 124.35
             },
             {
               "grade": "F",
@@ -377,7 +591,7 @@
           "contents": [
             {
               "grade": "C",
-              "volume": 85.19999999999999
+              "volume": 7.105427357601002e-15
             }
           ]
         },
@@ -385,20 +599,20 @@
           "capacity": 180,
           "contents": [
             {
-              "grade": "D",
-              "volume": 56.8
+              "grade": "Base",
+              "volume": 180
             }
           ]
         }
       }
     },
-    "5": {
+    "8": {
       "processing_rates": {
         "Base": 70.08,
         "A": 25.92,
         "B": 0,
-        "C": 2.4,
-        "D": 1.6,
+        "C": 0,
+        "D": 0,
         "E": 0,
         "F": 0
       },
@@ -412,27 +626,17 @@
           "ratio": "0.27:0.73",
           "capacity_used": 96.0,
           "capacity_limit": 96.0
-        },
-        {
-          "primary_grade": "C",
-          "secondary_grade": "D",
-          "primary_rate": 2.4,
-          "secondary_rate": 1.6,
-          "total_rate": 4.0,
-          "ratio": "0.60:0.40",
-          "capacity_used": 4.0,
-          "capacity_limit": 96.0
         }
       ],
-      "inventory": 1099.9999999999998,
+      "inventory": 740.0,
       "inventory_by_grade": {
-        "Base": 466.7599999999998,
-        "A": 46.31999999999999,
-        "B": 148.92,
-        "C": 82.79999999999998,
-        "D": 55.199999999999996,
+        "Base": 254.76,
+        "A": 72.24,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
         "E": 0,
-        "F": 300
+        "F": 300.0
       },
       "tanks": {
         "Tank 1": {
@@ -457,7 +661,7 @@
           "contents": [
             {
               "grade": "B",
-              "volume": 148.92
+              "volume": 124.35
             },
             {
               "grade": "F",
@@ -470,7 +674,7 @@
           "contents": [
             {
               "grade": "C",
-              "volume": 82.79999999999998
+              "volume": 7.105427357601002e-15
             }
           ]
         },
@@ -478,20 +682,20 @@
           "capacity": 180,
           "contents": [
             {
-              "grade": "D",
-              "volume": 55.199999999999996
+              "grade": "Base",
+              "volume": 180
             }
           ]
         }
       }
     },
-    "6": {
+    "9": {
       "processing_rates": {
         "Base": 70.08,
         "A": 25.92,
         "B": 0,
-        "C": 2.4,
-        "D": 1.6,
+        "C": 0,
+        "D": 0,
         "E": 0,
         "F": 0
       },
@@ -505,35 +709,25 @@
           "ratio": "0.27:0.73",
           "capacity_used": 96.0,
           "capacity_limit": 96.0
-        },
-        {
-          "primary_grade": "C",
-          "secondary_grade": "D",
-          "primary_rate": 2.4,
-          "secondary_rate": 1.6,
-          "total_rate": 4.0,
-          "ratio": "0.60:0.40",
-          "capacity_used": 4.0,
-          "capacity_limit": 96.0
         }
       ],
-      "inventory": 1569.9999999999998,
+      "inventory": 1214.0,
       "inventory_by_grade": {
-        "Base": 396.67999999999984,
-        "A": 20.39999999999999,
-        "B": 148.92,
-        "C": 80.39999999999998,
-        "D": 53.599999999999994,
-        "E": 250,
-        "F": 620
+        "Base": 184.68,
+        "A": 46.32,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 250.0,
+        "F": 620.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 250
+              "grade": "F",
+              "volume": 244.35
             }
           ]
         },
@@ -551,11 +745,11 @@
           "contents": [
             {
               "grade": "B",
-              "volume": 148.92
+              "volume": 124.35
             },
             {
               "grade": "F",
-              "volume": 101.08000000000001
+              "volume": 125.65
             }
           ]
         },
@@ -564,7 +758,7 @@
           "contents": [
             {
               "grade": "C",
-              "volume": 80.39999999999998
+              "volume": 7.105427357601002e-15
             }
           ]
         },
@@ -572,285 +766,8 @@
           "capacity": 180,
           "contents": [
             {
-              "grade": "D",
-              "volume": 53.599999999999994
-            }
-          ]
-        }
-      }
-    },
-    "7": {
-      "processing_rates": {
-        "Base": 55.15555555555553,
-        "A": 20.39999999999999,
-        "B": 0,
-        "C": 14.666666666666691,
-        "D": 9.777777777777795,
-        "E": 0,
-        "F": 0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "A",
-          "secondary_grade": "Base",
-          "primary_rate": 20.39999999999999,
-          "secondary_rate": 55.15555555555553,
-          "total_rate": 75.55555555555551,
-          "ratio": "0.27:0.73",
-          "capacity_used": 75.55555555555551,
-          "capacity_limit": 96.0
-        },
-        {
-          "primary_grade": "C",
-          "secondary_grade": "D",
-          "primary_rate": 14.666666666666691,
-          "secondary_rate": 9.777777777777795,
-          "total_rate": 24.444444444444485,
-          "ratio": "0.60:0.40",
-          "capacity_used": 24.444444444444485,
-          "capacity_limit": 96.0
-        }
-      ],
-      "inventory": 1470.0,
-      "inventory_by_grade": {
-        "Base": 341.5244444444443,
-        "A": 0,
-        "B": 148.92,
-        "C": 65.73333333333329,
-        "D": 43.8222222222222,
-        "E": 250,
-        "F": 620
-      },
-      "tanks": {
-        "Tank 1": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 250
-            }
-          ]
-        },
-        "Tank 2": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250
-            }
-          ]
-        },
-        "Tank 3": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "B",
-              "volume": 148.92
-            },
-            {
-              "grade": "F",
-              "volume": 101.08000000000001
-            }
-          ]
-        },
-        "Tank 4": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "C",
-              "volume": 65.73333333333329
-            }
-          ]
-        },
-        "Tank 5": {
-          "capacity": 180,
-          "contents": [
-            {
-              "grade": "D",
-              "volume": 43.8222222222222
-            }
-          ]
-        }
-      }
-    },
-    "8": {
-      "processing_rates": {
-        "Base": 2.92,
-        "A": 0,
-        "B": 1.08,
-        "C": 57.599999999999994,
-        "D": 38.4,
-        "E": 0,
-        "F": 0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "C",
-          "secondary_grade": "D",
-          "primary_rate": 57.599999999999994,
-          "secondary_rate": 38.4,
-          "total_rate": 96.0,
-          "ratio": "0.60:0.40",
-          "capacity_used": 96.0,
-          "capacity_limit": 96.0
-        },
-        {
-          "primary_grade": "B",
-          "secondary_grade": "Base",
-          "primary_rate": 1.08,
-          "secondary_rate": 2.92,
-          "total_rate": 4.0,
-          "ratio": "0.27:0.73",
-          "capacity_used": 4.0,
-          "capacity_limit": 95.0
-        }
-      ],
-      "inventory": 1369.9999999999998,
-      "inventory_by_grade": {
-        "Base": 338.6044444444443,
-        "A": 0,
-        "B": 147.83999999999997,
-        "C": 8.133333333333297,
-        "D": 5.422222222222203,
-        "E": 250,
-        "F": 620
-      },
-      "tanks": {
-        "Tank 1": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 250
-            }
-          ]
-        },
-        "Tank 2": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250
-            }
-          ]
-        },
-        "Tank 3": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "B",
-              "volume": 147.83999999999997
-            },
-            {
-              "grade": "F",
-              "volume": 101.08000000000001
-            }
-          ]
-        },
-        "Tank 4": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "C",
-              "volume": 8.133333333333297
-            }
-          ]
-        },
-        "Tank 5": {
-          "capacity": 180,
-          "contents": [
-            {
-              "grade": "D",
-              "volume": 5.422222222222203
-            }
-          ]
-        }
-      }
-    },
-    "9": {
-      "processing_rates": {
-        "Base": 63.10444444444448,
-        "A": 0,
-        "B": 23.340000000000014,
-        "C": 8.133333333333297,
-        "D": 5.4222222222221985,
-        "E": 0,
-        "F": 0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "C",
-          "secondary_grade": "D",
-          "primary_rate": 8.133333333333297,
-          "secondary_rate": 5.4222222222221985,
-          "total_rate": 13.555555555555497,
-          "ratio": "0.60:0.40",
-          "capacity_used": 13.555555555555497,
-          "capacity_limit": 96.0
-        },
-        {
-          "primary_grade": "B",
-          "secondary_grade": "Base",
-          "primary_rate": 23.340000000000014,
-          "secondary_rate": 63.10444444444448,
-          "total_rate": 86.4444444444445,
-          "ratio": "0.27:0.73",
-          "capacity_used": 86.4444444444445,
-          "capacity_limit": 95.0
-        }
-      ],
-      "inventory": 1419.9999999999998,
-      "inventory_by_grade": {
-        "Base": 275.49999999999983,
-        "A": 0,
-        "B": 274.49999999999994,
-        "C": 0,
-        "D": 4.440892098500626e-15,
-        "E": 250,
-        "F": 620
-      },
-      "tanks": {
-        "Tank 1": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 250
-            }
-          ]
-        },
-        "Tank 2": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250
-            }
-          ]
-        },
-        "Tank 3": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "B",
-              "volume": 125.57999999999997
-            },
-            {
-              "grade": "F",
-              "volume": 101.08000000000001
-            }
-          ]
-        },
-        "Tank 4": {
-          "capacity": 250,
-          "contents": []
-        },
-        "Tank 5": {
-          "capacity": 180,
-          "contents": [
-            {
-              "grade": "D",
-              "volume": 4.440892098500626e-15
+              "grade": "Base",
+              "volume": 179.60000000000002
             }
           ]
         }
@@ -858,63 +775,43 @@
     },
     "10": {
       "processing_rates": {
-        "Base": 74.35,
-        "A": 0,
-        "B": 25.65,
+        "Base": 70.08,
+        "A": 25.92,
+        "B": 0,
         "C": 0,
-        "D": 4.440892098500626e-15,
+        "D": 0,
         "E": 0,
         "F": 0
       },
       "blending_details": [
         {
-          "primary_grade": "B",
+          "primary_grade": "A",
           "secondary_grade": "Base",
-          "primary_rate": 25.65,
-          "secondary_rate": 69.35,
-          "total_rate": 95.0,
+          "primary_rate": 25.92,
+          "secondary_rate": 70.08,
+          "total_rate": 96.0,
           "ratio": "0.27:0.73",
-          "capacity_used": 95.0,
-          "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "D",
-          "secondary_grade": "Base",
-          "primary_rate": 4.440892098500626e-15,
-          "secondary_rate": 1.2006856414464655e-14,
-          "total_rate": 1.6447748512965283e-14,
-          "ratio": "0.27:0.73",
-          "capacity_used": 1.6447748512965283e-14,
-          "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "Base",
-          "secondary_grade": null,
-          "primary_rate": 4.999999999999983,
-          "secondary_rate": 0,
-          "total_rate": 4.999999999999983,
-          "ratio": "1.00:0.00",
-          "capacity_used": 4.999999999999983,
-          "capacity_limit": 87.0
+          "capacity_used": 96.0,
+          "capacity_limit": 96.0
         }
       ],
-      "inventory": 1869.9999999999998,
+      "inventory": 1118.0,
       "inventory_by_grade": {
-        "Base": 201.14999999999984,
-        "A": 0,
-        "B": 248.84999999999994,
-        "C": 0,
-        "D": 0,
-        "E": 800,
-        "F": 620
+        "Base": 114.6,
+        "A": 20.4,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 250.0,
+        "F": 620.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 250
+              "grade": "F",
+              "volume": 244.35
             }
           ]
         },
@@ -932,11 +829,11 @@
           "contents": [
             {
               "grade": "B",
-              "volume": 99.92999999999998
+              "volume": 124.35
             },
             {
               "grade": "F",
-              "volume": 101.08000000000001
+              "volume": 125.65
             }
           ]
         },
@@ -944,66 +841,61 @@
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 250
+              "grade": "C",
+              "volume": 7.105427357601002e-15
             }
           ]
         },
         "Tank 5": {
           "capacity": 180,
-          "contents": []
+          "contents": [
+            {
+              "grade": "Base",
+              "volume": 124.44444444444449
+            }
+          ]
         }
       }
     },
     "11": {
       "processing_rates": {
-        "Base": 74.35,
+        "Base": 0,
         "A": 0,
-        "B": 25.65,
+        "B": 0,
         "C": 0,
         "D": 0,
         "E": 0,
-        "F": 0
+        "F": 95.0
       },
       "blending_details": [
         {
-          "primary_grade": "B",
-          "secondary_grade": "Base",
-          "primary_rate": 25.65,
-          "secondary_rate": 69.35,
+          "primary_grade": "F",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
           "total_rate": 95.0,
-          "ratio": "0.27:0.73",
+          "ratio": "1.00:0.00",
           "capacity_used": 95.0,
           "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "Base",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 87.0
         }
       ],
-      "inventory": 1769.9999999999998,
+      "inventory": 1023.0,
       "inventory_by_grade": {
-        "Base": 126.79999999999984,
-        "A": 0,
-        "B": 223.19999999999993,
-        "C": 0,
-        "D": 0,
-        "E": 800,
-        "F": 620
+        "Base": 114.6,
+        "A": 20.4,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 250.0,
+        "F": 525.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 250
+              "grade": "F",
+              "volume": 244.35
             }
           ]
         },
@@ -1021,11 +913,11 @@
           "contents": [
             {
               "grade": "B",
-              "volume": 74.27999999999997
+              "volume": 98.69999999999999
             },
             {
               "grade": "F",
-              "volume": 101.08000000000001
+              "volume": 125.65
             }
           ]
         },
@@ -1033,66 +925,61 @@
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 250
+              "grade": "C",
+              "volume": 7.105427357601002e-15
             }
           ]
         },
         "Tank 5": {
           "capacity": 180,
-          "contents": []
+          "contents": [
+            {
+              "grade": "Base",
+              "volume": 55.09444444444449
+            }
+          ]
         }
       }
     },
     "12": {
       "processing_rates": {
-        "Base": 74.35,
+        "Base": 0,
         "A": 0,
-        "B": 25.65,
+        "B": 0,
         "C": 0,
         "D": 0,
         "E": 0,
-        "F": 0
+        "F": 95.0
       },
       "blending_details": [
         {
-          "primary_grade": "B",
-          "secondary_grade": "Base",
-          "primary_rate": 25.65,
-          "secondary_rate": 69.35,
+          "primary_grade": "F",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
           "total_rate": 95.0,
-          "ratio": "0.27:0.73",
+          "ratio": "1.00:0.00",
           "capacity_used": 95.0,
           "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "Base",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 87.0
         }
       ],
-      "inventory": 1669.9999999999998,
+      "inventory": 928.0,
       "inventory_by_grade": {
-        "Base": 52.44999999999985,
-        "A": 0,
-        "B": 197.54999999999993,
-        "C": 0,
-        "D": 0,
-        "E": 800,
-        "F": 620
+        "Base": 114.6,
+        "A": 20.4,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 250.0,
+        "F": 430.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 250
+              "grade": "F",
+              "volume": 244.35
             }
           ]
         },
@@ -1110,11 +997,11 @@
           "contents": [
             {
               "grade": "B",
-              "volume": 48.629999999999974
+              "volume": 73.04999999999998
             },
             {
               "grade": "F",
-              "volume": 101.08000000000001
+              "volume": 125.65
             }
           ]
         },
@@ -1122,8 +1009,8 @@
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 250
+              "grade": "C",
+              "volume": 7.105427357601002e-15
             }
           ]
         },
@@ -1135,53 +1022,43 @@
     },
     "13": {
       "processing_rates": {
-        "Base": 52.44999999999985,
+        "Base": 0,
         "A": 0,
-        "B": 19.399315068493095,
+        "B": 0,
         "C": 0,
         "D": 0,
-        "E": 28.150684931507058,
+        "E": 95.0,
         "F": 0
       },
       "blending_details": [
         {
-          "primary_grade": "B",
-          "secondary_grade": "Base",
-          "primary_rate": 19.399315068493095,
-          "secondary_rate": 52.44999999999985,
-          "total_rate": 71.84931506849294,
-          "ratio": "0.27:0.73",
-          "capacity_used": 71.84931506849294,
-          "capacity_limit": 95.0
-        },
-        {
           "primary_grade": "E",
           "secondary_grade": null,
-          "primary_rate": 28.150684931507058,
+          "primary_rate": 95.0,
           "secondary_rate": 0,
-          "total_rate": 28.150684931507058,
+          "total_rate": 95.0,
           "ratio": "1.00:0.00",
-          "capacity_used": 28.150684931507058,
+          "capacity_used": 95.0,
           "capacity_limit": 95.0
         }
       ],
-      "inventory": 1569.9999999999998,
+      "inventory": 833.0,
       "inventory_by_grade": {
-        "Base": 0,
-        "A": 0,
-        "B": 178.15068493150682,
-        "C": 0,
-        "D": 0,
-        "E": 771.849315068493,
-        "F": 620
+        "Base": 114.6,
+        "A": 20.4,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 155.0,
+        "F": 430.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 221.84931506849296
+              "grade": "F",
+              "volume": 244.35
             }
           ]
         },
@@ -1199,11 +1076,11 @@
           "contents": [
             {
               "grade": "B",
-              "volume": 29.23068493150688
+              "volume": 47.399999999999984
             },
             {
               "grade": "F",
-              "volume": 101.08000000000001
+              "volume": 125.65
             }
           ]
         },
@@ -1211,8 +1088,8 @@
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 250
+              "grade": "C",
+              "volume": 7.105427357601002e-15
             }
           ]
         },
@@ -1224,17 +1101,17 @@
     },
     "14": {
       "processing_rates": {
-        "Base": 0,
+        "Base": 95.0,
         "A": 0,
-        "B": 95.0,
+        "B": 0,
         "C": 0,
         "D": 0,
-        "E": 5.0,
+        "E": 0,
         "F": 0
       },
       "blending_details": [
         {
-          "primary_grade": "B",
+          "primary_grade": "Base",
           "secondary_grade": null,
           "primary_rate": 95.0,
           "secondary_rate": 0,
@@ -1242,35 +1119,25 @@
           "ratio": "1.00:0.00",
           "capacity_used": 95.0,
           "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "E",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 95.0
         }
       ],
-      "inventory": 1469.9999999999998,
+      "inventory": 738.0,
       "inventory_by_grade": {
-        "Base": 0,
-        "A": 0,
-        "B": 83.15068493150682,
-        "C": 0,
-        "D": 0,
-        "E": 766.849315068493,
-        "F": 620
+        "Base": 19.6,
+        "A": 20.4,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 155.0,
+        "F": 430.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 216.84931506849296
+              "grade": "F",
+              "volume": 244.35
             }
           ]
         },
@@ -1287,8 +1154,12 @@
           "capacity": 250,
           "contents": [
             {
+              "grade": "B",
+              "volume": 22.602739726027377
+            },
+            {
               "grade": "F",
-              "volume": 101.08000000000001
+              "volume": 125.65
             }
           ]
         },
@@ -1296,8 +1167,8 @@
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 250
+              "grade": "C",
+              "volume": 7.105427357601002e-15
             }
           ]
         },
@@ -1311,51 +1182,41 @@
       "processing_rates": {
         "Base": 0,
         "A": 0,
-        "B": 83.15068493150682,
-        "C": 0,
-        "D": 0,
-        "E": 16.849315068493183,
-        "F": 0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "B",
-          "secondary_grade": null,
-          "primary_rate": 83.15068493150682,
-          "secondary_rate": 0,
-          "total_rate": 83.15068493150682,
-          "ratio": "1.00:0.00",
-          "capacity_used": 83.15068493150682,
-          "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "E",
-          "secondary_grade": null,
-          "primary_rate": 16.849315068493183,
-          "secondary_rate": 0,
-          "total_rate": 16.849315068493183,
-          "ratio": "1.00:0.00",
-          "capacity_used": 16.849315068493183,
-          "capacity_limit": 95.0
-        }
-      ],
-      "inventory": 1369.9999999999998,
-      "inventory_by_grade": {
-        "Base": 0,
-        "A": 0,
         "B": 0,
         "C": 0,
         "D": 0,
-        "E": 749.9999999999998,
-        "F": 620
+        "E": 0,
+        "F": 95.0
+      },
+      "blending_details": [
+        {
+          "primary_grade": "F",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 643.0,
+      "inventory_by_grade": {
+        "Base": 19.6,
+        "A": 20.4,
+        "B": 55.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 155.0,
+        "F": 335.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 199.99999999999977
+              "grade": "F",
+              "volume": 244.35
             }
           ]
         },
@@ -1372,19 +1233,18 @@
           "capacity": 250,
           "contents": [
             {
+              "grade": "B",
+              "volume": 22.602739726027377
+            },
+            {
               "grade": "F",
-              "volume": 101.08000000000001
+              "volume": 125.65
             }
           ]
         },
         "Tank 4": {
           "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 250
-            }
-          ]
+          "contents": []
         },
         "Tank 5": {
           "capacity": 180,
@@ -1399,12 +1259,12 @@
         "B": 0,
         "C": 0,
         "D": 0,
-        "E": 95.0,
-        "F": 5.0
+        "E": 0,
+        "F": 95.0
       },
       "blending_details": [
         {
-          "primary_grade": "E",
+          "primary_grade": "F",
           "secondary_grade": null,
           "primary_rate": 95.0,
           "secondary_rate": 0,
@@ -1412,35 +1272,25 @@
           "ratio": "1.00:0.00",
           "capacity_used": 95.0,
           "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "F",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 95.0
         }
       ],
-      "inventory": 1269.9999999999998,
+      "inventory": 1248.0,
       "inventory_by_grade": {
-        "Base": 0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 654.9999999999998,
-        "F": 615.0
+        "Base": 19.6,
+        "A": 20.4,
+        "B": 205.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 705.0,
+        "F": 240.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 104.99999999999977
+              "grade": "F",
+              "volume": 244.35
             }
           ]
         },
@@ -1449,7 +1299,7 @@
           "contents": [
             {
               "grade": "F",
-              "volume": 245.0
+              "volume": 250
             }
           ]
         },
@@ -1457,8 +1307,12 @@
           "capacity": 250,
           "contents": [
             {
+              "grade": "B",
+              "volume": 29.349999999999994
+            },
+            {
               "grade": "F",
-              "volume": 101.08000000000001
+              "volume": 125.65
             }
           ]
         },
@@ -1466,14 +1320,19 @@
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 250
+              "grade": "B",
+              "volume": 48.252739726027386
             }
           ]
         },
         "Tank 5": {
           "capacity": 180,
-          "contents": []
+          "contents": [
+            {
+              "grade": "E",
+              "volume": 180
+            }
+          ]
         }
       }
     },
@@ -1484,8 +1343,238 @@
         "B": 0,
         "C": 0,
         "D": 0,
+        "E": 0,
+        "F": 95.0
+      },
+      "blending_details": [
+        {
+          "primary_grade": "F",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 1153.0,
+      "inventory_by_grade": {
+        "Base": 19.6,
+        "A": 20.4,
+        "B": 205.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 705.0,
+        "F": 145.0
+      },
+      "tanks": {
+        "Tank 1": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 244.35
+            }
+          ]
+        },
+        "Tank 2": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 3": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 125.65
+            }
+          ]
+        },
+        "Tank 4": {
+          "capacity": 250,
+          "contents": []
+        },
+        "Tank 5": {
+          "capacity": 180,
+          "contents": [
+            {
+              "grade": "E",
+              "volume": 180
+            }
+          ]
+        }
+      }
+    },
+    "18": {
+      "processing_rates": {
+        "Base": 0,
+        "A": 0,
+        "B": 95.0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "blending_details": [
+        {
+          "primary_grade": "B",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 1058.0,
+      "inventory_by_grade": {
+        "Base": 19.6,
+        "A": 20.4,
+        "B": 110.0,
+        "C": 34.8,
+        "D": 23.2,
+        "E": 705.0,
+        "F": 145.0
+      },
+      "tanks": {
+        "Tank 1": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 244.35
+            }
+          ]
+        },
+        "Tank 2": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 3": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 125.65
+            }
+          ]
+        },
+        "Tank 4": {
+          "capacity": 250,
+          "contents": []
+        },
+        "Tank 5": {
+          "capacity": 180,
+          "contents": [
+            {
+              "grade": "E",
+              "volume": 85.0
+            }
+          ]
+        }
+      }
+    },
+    "19": {
+      "processing_rates": {
+        "Base": 0,
+        "A": 0,
+        "B": 95.0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "blending_details": [
+        {
+          "primary_grade": "B",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 1163.0,
+      "inventory_by_grade": {
+        "Base": 19.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 234.8,
+        "D": 23.2,
+        "E": 705.0,
+        "F": 145.0
+      },
+      "tanks": {
+        "Tank 1": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 244.35
+            }
+          ]
+        },
+        "Tank 2": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 3": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 125.65
+            }
+          ]
+        },
+        "Tank 4": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "C",
+              "volume": 104.0
+            }
+          ]
+        },
+        "Tank 5": {
+          "capacity": 180,
+          "contents": [
+            {
+              "grade": "E",
+              "volume": 85.0
+            }
+          ]
+        }
+      }
+    },
+    "20": {
+      "processing_rates": {
+        "Base": 0,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
         "E": 95.0,
-        "F": 5.0
+        "F": 0
       },
       "blending_details": [
         {
@@ -1497,35 +1586,25 @@
           "ratio": "1.00:0.00",
           "capacity_used": 95.0,
           "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "F",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 95.0
         }
       ],
-      "inventory": 1169.9999999999998,
+      "inventory": 1068.0,
       "inventory_by_grade": {
-        "Base": 0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 559.9999999999998,
-        "F": 610.0
+        "Base": 19.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 234.8,
+        "D": 23.2,
+        "E": 610.0,
+        "F": 145.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 9.999999999999773
+              "grade": "F",
+              "volume": 244.35
             }
           ]
         },
@@ -1534,7 +1613,7 @@
           "contents": [
             {
               "grade": "F",
-              "volume": 240.0
+              "volume": 250
             }
           ]
         },
@@ -1543,7 +1622,7 @@
           "contents": [
             {
               "grade": "F",
-              "volume": 101.08000000000001
+              "volume": 125.65
             }
           ]
         },
@@ -1551,93 +1630,8 @@
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 250
-            }
-          ]
-        },
-        "Tank 5": {
-          "capacity": 180,
-          "contents": []
-        }
-      }
-    },
-    "18": {
-      "processing_rates": {
-        "Base": 4.0,
-        "A": 0,
-        "B": 0,
-        "C": 96.0,
-        "D": 0,
-        "E": 0,
-        "F": 0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "C",
-          "secondary_grade": null,
-          "primary_rate": 96.0,
-          "secondary_rate": 0,
-          "total_rate": 96.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 96.0,
-          "capacity_limit": 96.0
-        },
-        {
-          "primary_grade": "Base",
-          "secondary_grade": null,
-          "primary_rate": 4.0,
-          "secondary_rate": 0,
-          "total_rate": 4.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 4.0,
-          "capacity_limit": 87.0
-        }
-      ],
-      "inventory": 1629.9999999999998,
-      "inventory_by_grade": {
-        "Base": 356.0,
-        "A": 0,
-        "B": 0,
-        "C": 104.0,
-        "D": 0,
-        "E": 559.9999999999998,
-        "F": 610.0
-      },
-      "tanks": {
-        "Tank 1": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 9.999999999999773
-            }
-          ]
-        },
-        "Tank 2": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 240.0
-            }
-          ]
-        },
-        "Tank 3": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 101.08000000000001
-            }
-          ]
-        },
-        "Tank 4": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 250
+              "grade": "C",
+              "volume": 8.0
             }
           ]
         },
@@ -1645,197 +1639,7 @@
           "capacity": 180,
           "contents": [
             {
-              "grade": "Base",
-              "volume": 176.0
-            }
-          ]
-        }
-      }
-    },
-    "19": {
-      "processing_rates": {
-        "Base": 4.0,
-        "A": 0,
-        "B": 0,
-        "C": 96.0,
-        "D": 0,
-        "E": 0,
-        "F": 0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "C",
-          "secondary_grade": null,
-          "primary_rate": 96.0,
-          "secondary_rate": 0,
-          "total_rate": 96.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 96.0,
-          "capacity_limit": 96.0
-        },
-        {
-          "primary_grade": "Base",
-          "secondary_grade": null,
-          "primary_rate": 4.0,
-          "secondary_rate": 0,
-          "total_rate": 4.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 4.0,
-          "capacity_limit": 87.0
-        }
-      ],
-      "inventory": 1529.9999999999998,
-      "inventory_by_grade": {
-        "Base": 352.0,
-        "A": 0,
-        "B": 0,
-        "C": 8.0,
-        "D": 0,
-        "E": 559.9999999999998,
-        "F": 610.0
-      },
-      "tanks": {
-        "Tank 1": {
-          "capacity": 250,
-          "contents": [
-            {
               "grade": "E",
-              "volume": 9.999999999999773
-            }
-          ]
-        },
-        "Tank 2": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 240.0
-            }
-          ]
-        },
-        "Tank 3": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 101.08000000000001
-            }
-          ]
-        },
-        "Tank 4": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 250
-            }
-          ]
-        },
-        "Tank 5": {
-          "capacity": 180,
-          "contents": [
-            {
-              "grade": "Base",
-              "volume": 172.0
-            }
-          ]
-        }
-      }
-    },
-    "20": {
-      "processing_rates": {
-        "Base": 87.0,
-        "A": 0,
-        "B": 0,
-        "C": 8.0,
-        "D": 0,
-        "E": 5.0,
-        "F": 0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "C",
-          "secondary_grade": null,
-          "primary_rate": 8.0,
-          "secondary_rate": 0,
-          "total_rate": 8.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 8.0,
-          "capacity_limit": 96.0
-        },
-        {
-          "primary_grade": "Base",
-          "secondary_grade": null,
-          "primary_rate": 87.0,
-          "secondary_rate": 0,
-          "total_rate": 87.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 87.0,
-          "capacity_limit": 87.0
-        },
-        {
-          "primary_grade": "E",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 95.0
-        }
-      ],
-      "inventory": 1709.9999999999998,
-      "inventory_by_grade": {
-        "Base": 265.0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 554.9999999999998,
-        "F": 890.0
-      },
-      "tanks": {
-        "Tank 1": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 4.999999999999773
-            }
-          ]
-        },
-        "Tank 2": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 3": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 4": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 250
-            }
-          ]
-        },
-        "Tank 5": {
-          "capacity": 180,
-          "contents": [
-            {
-              "grade": "Base",
               "volume": 85.0
             }
           ]
@@ -1844,357 +1648,17 @@
     },
     "21": {
       "processing_rates": {
-        "Base": 87.0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 13.0,
-        "F": 0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "Base",
-          "secondary_grade": null,
-          "primary_rate": 87.0,
-          "secondary_rate": 0,
-          "total_rate": 87.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 87.0,
-          "capacity_limit": 87.0
-        },
-        {
-          "primary_grade": "E",
-          "secondary_grade": null,
-          "primary_rate": 13.0,
-          "secondary_rate": 0,
-          "total_rate": 13.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 13.0,
-          "capacity_limit": 95.0
-        }
-      ],
-      "inventory": 1609.9999999999998,
-      "inventory_by_grade": {
-        "Base": 178.0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 541.9999999999998,
-        "F": 890.0
-      },
-      "tanks": {
-        "Tank 1": {
-          "capacity": 250,
-          "contents": []
-        },
-        "Tank 2": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 3": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 4": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 241.99999999999977
-            }
-          ]
-        },
-        "Tank 5": {
-          "capacity": 180,
-          "contents": []
-        }
-      }
-    },
-    "22": {
-      "processing_rates": {
-        "Base": 87.0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 13.0,
-        "F": 0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "Base",
-          "secondary_grade": null,
-          "primary_rate": 87.0,
-          "secondary_rate": 0,
-          "total_rate": 87.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 87.0,
-          "capacity_limit": 87.0
-        },
-        {
-          "primary_grade": "E",
-          "secondary_grade": null,
-          "primary_rate": 13.0,
-          "secondary_rate": 0,
-          "total_rate": 13.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 13.0,
-          "capacity_limit": 95.0
-        }
-      ],
-      "inventory": 1509.9999999999998,
-      "inventory_by_grade": {
-        "Base": 91.0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 528.9999999999998,
-        "F": 890.0
-      },
-      "tanks": {
-        "Tank 1": {
-          "capacity": 250,
-          "contents": []
-        },
-        "Tank 2": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 3": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 4": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 228.99999999999977
-            }
-          ]
-        },
-        "Tank 5": {
-          "capacity": 180,
-          "contents": []
-        }
-      }
-    },
-    "23": {
-      "processing_rates": {
-        "Base": 74.35,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 25.65,
-        "E": 0,
-        "F": 0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "D",
-          "secondary_grade": "Base",
-          "primary_rate": 25.65,
-          "secondary_rate": 69.35,
-          "total_rate": 95.0,
-          "ratio": "0.27:0.73",
-          "capacity_used": 95.0,
-          "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "Base",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 87.0
-        }
-      ],
-      "inventory": 1659.9999999999998,
-      "inventory_by_grade": {
-        "Base": 16.650000000000006,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 124.35,
-        "E": 628.9999999999998,
-        "F": 890.0
-      },
-      "tanks": {
-        "Tank 1": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "D",
-              "volume": 124.35
-            }
-          ]
-        },
-        "Tank 2": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 3": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 4": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 5": {
-          "capacity": 180,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 78.99999999999977
-            }
-          ]
-        }
-      }
-    },
-    "24": {
-      "processing_rates": {
-        "Base": 16.650000000000006,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 6.158219178082194,
-        "E": 77.1917808219178,
-        "F": 0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "D",
-          "secondary_grade": "Base",
-          "primary_rate": 6.158219178082194,
-          "secondary_rate": 16.650000000000006,
-          "total_rate": 22.8082191780822,
-          "ratio": "0.27:0.73",
-          "capacity_used": 22.8082191780822,
-          "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "E",
-          "secondary_grade": null,
-          "primary_rate": 77.1917808219178,
-          "secondary_rate": 0,
-          "total_rate": 77.1917808219178,
-          "ratio": "1.00:0.00",
-          "capacity_used": 77.1917808219178,
-          "capacity_limit": 95.0
-        }
-      ],
-      "inventory": 1559.9999999999998,
-      "inventory_by_grade": {
         "Base": 0,
         "A": 0,
         "B": 0,
         "C": 0,
-        "D": 118.1917808219178,
-        "E": 551.808219178082,
-        "F": 890.0
-      },
-      "tanks": {
-        "Tank 1": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "D",
-              "volume": 118.1917808219178
-            }
-          ]
-        },
-        "Tank 2": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 3": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 4": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 172.8082191780822
-            }
-          ]
-        },
-        "Tank 5": {
-          "capacity": 180,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 78.99999999999977
-            }
-          ]
-        }
-      }
-    },
-    "25": {
-      "processing_rates": {
-        "Base": 0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 95.0,
-        "E": 5.0,
+        "D": 0,
+        "E": 95.0,
         "F": 0
       },
       "blending_details": [
         {
-          "primary_grade": "D",
+          "primary_grade": "E",
           "secondary_grade": null,
           "primary_rate": 95.0,
           "secondary_rate": 0,
@@ -2202,35 +1666,25 @@
           "ratio": "1.00:0.00",
           "capacity_used": 95.0,
           "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "E",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 95.0
         }
       ],
-      "inventory": 1459.9999999999998,
+      "inventory": 973.0,
       "inventory_by_grade": {
-        "Base": 0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 23.191780821917803,
-        "E": 546.808219178082,
-        "F": 890.0
+        "Base": 19.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 234.8,
+        "D": 23.2,
+        "E": 515.0,
+        "F": 145.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
           "contents": [
             {
-              "grade": "D",
-              "volume": 23.191780821917803
+              "grade": "F",
+              "volume": 244.35
             }
           ]
         },
@@ -2239,7 +1693,82 @@
           "contents": [
             {
               "grade": "F",
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 3": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 125.65
+            }
+          ]
+        },
+        "Tank 4": {
+          "capacity": 250,
+          "contents": []
+        },
+        "Tank 5": {
+          "capacity": 180,
+          "contents": [
+            {
+              "grade": "E",
+              "volume": 85.0
+            }
+          ]
+        }
+      }
+    },
+    "22": {
+      "processing_rates": {
+        "Base": 0,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 95.0
+      },
+      "blending_details": [
+        {
+          "primary_grade": "F",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 1518.0,
+      "inventory_by_grade": {
+        "Base": 379.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 234.8,
+        "D": 23.2,
+        "E": 515.0,
+        "F": 330.0
+      },
+      "tanks": {
+        "Tank 1": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
               "volume": 250.0
+            }
+          ]
+        },
+        "Tank 2": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250
             }
           ]
         },
@@ -2256,8 +1785,8 @@
           "capacity": 250,
           "contents": [
             {
-              "grade": "E",
-              "volume": 167.8082191780822
+              "grade": "Base",
+              "volume": 163.0
             }
           ]
         },
@@ -2266,7 +1795,237 @@
           "contents": [
             {
               "grade": "E",
-              "volume": 78.99999999999977
+              "volume": 85.0
+            }
+          ]
+        }
+      }
+    },
+    "23": {
+      "processing_rates": {
+        "Base": 0,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 95.0
+      },
+      "blending_details": [
+        {
+          "primary_grade": "F",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 1423.0,
+      "inventory_by_grade": {
+        "Base": 379.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 234.8,
+        "D": 23.2,
+        "E": 515.0,
+        "F": 235.0
+      },
+      "tanks": {
+        "Tank 1": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
+        },
+        "Tank 2": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 3": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
+        },
+        "Tank 4": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "Base",
+              "volume": 76.0
+            }
+          ]
+        },
+        "Tank 5": {
+          "capacity": 180,
+          "contents": [
+            {
+              "grade": "E",
+              "volume": 85.0
+            }
+          ]
+        }
+      }
+    },
+    "24": {
+      "processing_rates": {
+        "Base": 0,
+        "A": 0,
+        "B": 0,
+        "C": 95.0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "blending_details": [
+        {
+          "primary_grade": "C",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 1328.0,
+      "inventory_by_grade": {
+        "Base": 379.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 139.8,
+        "D": 23.2,
+        "E": 515.0,
+        "F": 235.0
+      },
+      "tanks": {
+        "Tank 1": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
+        },
+        "Tank 2": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 3": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
+        },
+        "Tank 4": {
+          "capacity": 250,
+          "contents": []
+        },
+        "Tank 5": {
+          "capacity": 180,
+          "contents": [
+            {
+              "grade": "E",
+              "volume": 85.0
+            }
+          ]
+        }
+      }
+    },
+    "25": {
+      "processing_rates": {
+        "Base": 95.0,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "blending_details": [
+        {
+          "primary_grade": "Base",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 1233.0,
+      "inventory_by_grade": {
+        "Base": 284.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 139.8,
+        "D": 23.2,
+        "E": 515.0,
+        "F": 235.0
+      },
+      "tanks": {
+        "Tank 1": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
+        },
+        "Tank 2": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 3": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
+        },
+        "Tank 4": {
+          "capacity": 250,
+          "contents": []
+        },
+        "Tank 5": {
+          "capacity": 180,
+          "contents": [
+            {
+              "grade": "E",
+              "volume": 85.0
             }
           ]
         }
@@ -2278,53 +2037,48 @@
         "A": 0,
         "B": 0,
         "C": 0,
-        "D": 23.191780821917803,
-        "E": 76.8082191780822,
-        "F": 0
+        "D": 0,
+        "E": 0,
+        "F": 95.0
       },
       "blending_details": [
         {
-          "primary_grade": "D",
+          "primary_grade": "F",
           "secondary_grade": null,
-          "primary_rate": 23.191780821917803,
+          "primary_rate": 95.0,
           "secondary_rate": 0,
-          "total_rate": 23.191780821917803,
+          "total_rate": 95.0,
           "ratio": "1.00:0.00",
-          "capacity_used": 23.191780821917803,
-          "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "E",
-          "secondary_grade": null,
-          "primary_rate": 76.8082191780822,
-          "secondary_rate": 0,
-          "total_rate": 76.8082191780822,
-          "ratio": "1.00:0.00",
-          "capacity_used": 76.8082191780822,
+          "capacity_used": 95.0,
           "capacity_limit": 95.0
         }
       ],
-      "inventory": 1359.9999999999998,
+      "inventory": 1138.0,
       "inventory_by_grade": {
-        "Base": 0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 469.99999999999983,
-        "F": 890.0
+        "Base": 284.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 139.8,
+        "D": 23.2,
+        "E": 515.0,
+        "F": 140.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
-          "contents": []
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
         },
         "Tank 2": {
           "capacity": 250,
           "contents": [
             {
               "grade": "F",
-              "volume": 250.0
+              "volume": 250
             }
           ]
         },
@@ -2339,19 +2093,14 @@
         },
         "Tank 4": {
           "capacity": 250,
-          "contents": [
-            {
-              "grade": "E",
-              "volume": 91.0
-            }
-          ]
+          "contents": []
         },
         "Tank 5": {
           "capacity": 180,
           "contents": [
             {
               "grade": "E",
-              "volume": 78.99999999999977
+              "volume": 85.0
             }
           ]
         }
@@ -2364,12 +2113,12 @@
         "B": 0,
         "C": 0,
         "D": 0,
-        "E": 95.0,
-        "F": 5.0
+        "E": 0,
+        "F": 95.0
       },
       "blending_details": [
         {
-          "primary_grade": "E",
+          "primary_grade": "F",
           "secondary_grade": null,
           "primary_rate": 95.0,
           "secondary_rate": 0,
@@ -2377,39 +2126,114 @@
           "ratio": "1.00:0.00",
           "capacity_used": 95.0,
           "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "F",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 95.0
         }
       ],
-      "inventory": 1259.9999999999998,
+      "inventory": 1293.0,
       "inventory_by_grade": {
-        "Base": 0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 374.99999999999983,
-        "F": 885.0
+        "Base": 284.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 139.8,
+        "D": 173.2,
+        "E": 615.0,
+        "F": 45.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
-          "contents": []
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
         },
         "Tank 2": {
           "capacity": 250,
           "contents": [
             {
               "grade": "F",
-              "volume": 245.0
+              "volume": 250
+            }
+          ]
+        },
+        "Tank 3": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
+        },
+        "Tank 4": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "D",
+              "volume": 55.0
+            }
+          ]
+        },
+        "Tank 5": {
+          "capacity": 180,
+          "contents": [
+            {
+              "grade": "E",
+              "volume": 180.0
+            }
+          ]
+        }
+      }
+    },
+    "28": {
+      "processing_rates": {
+        "Base": 95.0,
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "E": 0,
+        "F": 0
+      },
+      "blending_details": [
+        {
+          "primary_grade": "Base",
+          "secondary_grade": null,
+          "primary_rate": 95.0,
+          "secondary_rate": 0,
+          "total_rate": 95.0,
+          "ratio": "1.00:0.00",
+          "capacity_used": 95.0,
+          "capacity_limit": 95.0
+        }
+      ],
+      "inventory": 1198.0,
+      "inventory_by_grade": {
+        "Base": 189.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 139.8,
+        "D": 173.2,
+        "E": 615.0,
+        "F": 45.0
+      },
+      "tanks": {
+        "Tank 1": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
+        },
+        "Tank 2": {
+          "capacity": 250,
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250
             }
           ]
         },
@@ -2431,84 +2255,9 @@
           "contents": [
             {
               "grade": "E",
-              "volume": 74.99999999999977
+              "volume": 180.0
             }
           ]
-        }
-      }
-    },
-    "28": {
-      "processing_rates": {
-        "Base": 0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 95.0,
-        "F": 5.0
-      },
-      "blending_details": [
-        {
-          "primary_grade": "E",
-          "secondary_grade": null,
-          "primary_rate": 95.0,
-          "secondary_rate": 0,
-          "total_rate": 95.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 95.0,
-          "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "F",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 95.0
-        }
-      ],
-      "inventory": 1159.9999999999998,
-      "inventory_by_grade": {
-        "Base": 0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 279.99999999999983,
-        "F": 880.0
-      },
-      "tanks": {
-        "Tank 1": {
-          "capacity": 250,
-          "contents": []
-        },
-        "Tank 2": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 240.0
-            }
-          ]
-        },
-        "Tank 3": {
-          "capacity": 250,
-          "contents": [
-            {
-              "grade": "F",
-              "volume": 250.0
-            }
-          ]
-        },
-        "Tank 4": {
-          "capacity": 250,
-          "contents": []
-        },
-        "Tank 5": {
-          "capacity": 180,
-          "contents": []
         }
       }
     },
@@ -2517,14 +2266,14 @@
         "Base": 0,
         "A": 0,
         "B": 0,
-        "C": 0,
+        "C": 95.0,
         "D": 0,
-        "E": 95.0,
-        "F": 5.0
+        "E": 0,
+        "F": 0
       },
       "blending_details": [
         {
-          "primary_grade": "E",
+          "primary_grade": "C",
           "secondary_grade": null,
           "primary_rate": 95.0,
           "secondary_rate": 0,
@@ -2532,39 +2281,34 @@
           "ratio": "1.00:0.00",
           "capacity_used": 95.0,
           "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "F",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 95.0
         }
       ],
-      "inventory": 1059.9999999999998,
+      "inventory": 1103.0,
       "inventory_by_grade": {
-        "Base": 0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 184.99999999999983,
-        "F": 875.0
+        "Base": 189.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 44.8,
+        "D": 173.2,
+        "E": 615.0,
+        "F": 45.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
-          "contents": []
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
         },
         "Tank 2": {
           "capacity": 250,
           "contents": [
             {
               "grade": "F",
-              "volume": 235.0
+              "volume": 250
             }
           ]
         },
@@ -2583,7 +2327,12 @@
         },
         "Tank 5": {
           "capacity": 180,
-          "contents": []
+          "contents": [
+            {
+              "grade": "E",
+              "volume": 85.0
+            }
+          ]
         }
       }
     },
@@ -2595,7 +2344,7 @@
         "C": 0,
         "D": 0,
         "E": 95.0,
-        "F": 5.0
+        "F": 0
       },
       "blending_details": [
         {
@@ -2607,39 +2356,34 @@
           "ratio": "1.00:0.00",
           "capacity_used": 95.0,
           "capacity_limit": 95.0
-        },
-        {
-          "primary_grade": "F",
-          "secondary_grade": null,
-          "primary_rate": 5.0,
-          "secondary_rate": 0,
-          "total_rate": 5.0,
-          "ratio": "1.00:0.00",
-          "capacity_used": 5.0,
-          "capacity_limit": 95.0
         }
       ],
-      "inventory": 959.9999999999998,
+      "inventory": 1008.0,
       "inventory_by_grade": {
-        "Base": 0,
-        "A": 0,
-        "B": 0,
-        "C": 0,
-        "D": 0,
-        "E": 89.99999999999983,
-        "F": 870.0
+        "Base": 189.6,
+        "A": 20.4,
+        "B": 15.0,
+        "C": 44.8,
+        "D": 173.2,
+        "E": 520.0,
+        "F": 45.0
       },
       "tanks": {
         "Tank 1": {
           "capacity": 250,
-          "contents": []
+          "contents": [
+            {
+              "grade": "F",
+              "volume": 250.0
+            }
+          ]
         },
         "Tank 2": {
           "capacity": 250,
           "contents": [
             {
               "grade": "F",
-              "volume": 230.0
+              "volume": 250
             }
           ]
         },
@@ -2665,62 +2409,50 @@
   },
   "vessel_arrivals": [
     {
-      "arrival_day": 2,
+      "arrival_day": 5,
       "cargo": [
         {
           "grade": "Base",
           "volume": 400,
           "origin": "PM",
+          "simulated_allocation": [
+            {
+              "tank": "Tank 5",
+              "volume": 180
+            },
+            {
+              "tank": "Tank 5",
+              "volume": 180
+            }
+          ],
+          "overflow_amount": 40,
           "tank_allocation": [
             {
               "tank": "Tank 1",
-              "volume": 2.9199999999999875
+              "volume": 69.35
             },
             {
-              "tank": "OVERFLOW",
-              "volume": 397.08000000000004
+              "tank": "Tank 5",
+              "volume": 180
             }
           ]
-        }
-      ],
-      "ldr_text": "1-3 Oct"
-    },
-    {
-      "arrival_day": 2,
-      "cargo": [
+        },
         {
           "grade": "A",
           "volume": 150,
           "origin": "PM",
-          "tank_allocation": [
-            {
-              "tank": "OVERFLOW",
-              "volume": 150
-            }
-          ]
+          "simulated_allocation": [],
+          "overflow_amount": 150,
+          "tank_allocation": []
         }
       ],
-      "ldr_text": "1-3 Oct"
+      "ldr_text": "1-3 Oct",
+      "original_arrival_day": 3,
+      "days_held": 1,
+      "actual_arrival_day": 5
     },
     {
-      "arrival_day": 6,
-      "cargo": [
-        {
-          "grade": "E",
-          "volume": 250,
-          "origin": "Sabah",
-          "tank_allocation": [
-            {
-              "tank": "Tank 1",
-              "volume": 250
-            }
-          ]
-        }
-      ],
-      "ldr_text": "5-7 Oct"
-    },
-    {
-      "arrival_day": 6,
+      "arrival_day": 9,
       "cargo": [
         {
           "grade": "F",
@@ -2729,19 +2461,26 @@
           "tank_allocation": [
             {
               "tank": "Tank 3",
-              "volume": 51.08000000000001
+              "volume": 75.65
             },
             {
-              "tank": "OVERFLOW",
-              "volume": 268.91999999999996
+              "tank": "Tank 1",
+              "volume": 244.35
             }
           ]
+        },
+        {
+          "grade": "E",
+          "volume": 250,
+          "origin": "Sabah",
+          "tank_allocation": []
         }
       ],
-      "ldr_text": "5-7 Oct"
+      "ldr_text": "5-7 Oct",
+      "actual_arrival_day": 9
     },
     {
-      "arrival_day": 9,
+      "arrival_day": 16,
       "cargo": [
         {
           "grade": "B",
@@ -2750,61 +2489,44 @@
           "tank_allocation": [
             {
               "tank": "Tank 3",
-              "volume": 1.0800000000000125
+              "volume": 101.74726027397261
             },
             {
-              "tank": "OVERFLOW",
-              "volume": 148.92
+              "tank": "Tank 4",
+              "volume": 48.252739726027386
             }
           ]
-        }
-      ],
-      "ldr_text": "8-10 Oct"
-    },
-    {
-      "arrival_day": 10,
-      "cargo": [
+        },
         {
           "grade": "E",
           "volume": 550,
           "origin": "Sabah",
-          "tank_allocation": [
-            {
-              "tank": "Tank 4",
-              "volume": 250
-            },
-            {
-              "tank": "OVERFLOW",
-              "volume": 300
-            }
-          ]
-        }
-      ],
-      "ldr_text": "10-11 Oct"
-    },
-    {
-      "arrival_day": 18,
-      "cargo": [
-        {
-          "grade": "Base",
-          "volume": 360,
-          "origin": "PM",
-          "tank_allocation": [
+          "simulated_allocation": [
             {
               "tank": "Tank 5",
               "volume": 180
             },
             {
-              "tank": "OVERFLOW",
+              "tank": "Tank 5",
+              "volume": 180
+            }
+          ],
+          "overflow_amount": 190,
+          "tank_allocation": [
+            {
+              "tank": "Tank 5",
               "volume": 180
             }
           ]
         }
       ],
-      "ldr_text": "17-19 Oct"
+      "ldr_text": "10-10 Oct",
+      "original_arrival_day": 14,
+      "days_held": 1,
+      "actual_arrival_day": 16
     },
     {
-      "arrival_day": 18,
+      "arrival_day": 19,
       "cargo": [
         {
           "grade": "C",
@@ -2812,41 +2534,50 @@
           "origin": "PM",
           "tank_allocation": [
             {
-              "tank": "OVERFLOW",
+              "tank": "Tank 4",
               "volume": 200
             }
           ]
         }
       ],
-      "ldr_text": "17-19 Oct"
+      "ldr_text": "17-19 Oct",
+      "actual_arrival_day": 19
     },
     {
-      "arrival_day": 20,
+      "arrival_day": 22,
       "cargo": [
+        {
+          "grade": "Base",
+          "volume": 360,
+          "origin": "PM",
+          "tank_allocation": [
+            {
+              "tank": "Tank 4",
+              "volume": 250
+            }
+          ]
+        },
         {
           "grade": "F",
           "volume": 280,
           "origin": "Sarawak",
           "tank_allocation": [
             {
-              "tank": "Tank 2",
-              "volume": 10.0
+              "tank": "Tank 1",
+              "volume": 5.650000000000006
             },
             {
               "tank": "Tank 3",
-              "volume": 148.92
-            },
-            {
-              "tank": "OVERFLOW",
-              "volume": 121.08000000000001
+              "volume": 124.35
             }
           ]
         }
       ],
-      "ldr_text": "19-22 Oct"
+      "ldr_text": "19-19 Oct",
+      "actual_arrival_day": 22
     },
     {
-      "arrival_day": 23,
+      "arrival_day": 27,
       "cargo": [
         {
           "grade": "D",
@@ -2854,34 +2585,35 @@
           "origin": "Sabah",
           "tank_allocation": [
             {
-              "tank": "Tank 1",
+              "tank": "Tank 4",
               "volume": 150
             }
           ]
-        }
-      ],
-      "ldr_text": "23-24 Oct"
-    },
-    {
-      "arrival_day": 23,
-      "cargo": [
+        },
         {
           "grade": "E",
           "volume": 100,
           "origin": "Sabah",
           "tank_allocation": [
             {
-              "tank": "Tank 4",
-              "volume": 21.000000000000227
-            },
-            {
               "tank": "Tank 5",
-              "volume": 78.99999999999977
+              "volume": 95.0
             }
           ]
         }
       ],
-      "ldr_text": "23-24 Oct"
+      "ldr_text": "23-24 Oct",
+      "actual_arrival_day": 27
     }
-  ]
+  ],
+  "held_vessels": [],
+  "deferred_vessels": [],
+  "vessel_optimization": {
+    "vessel_count": 6,
+    "freight_cost": 720000.0
+  },
+  "lp_optimization": {
+    "optimized_on": "2025-05-02 16:13:14",
+    "objective_value": "maximize_throughput"
+  }
 }
