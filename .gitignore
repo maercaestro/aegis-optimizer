@@ -27,3 +27,4 @@ dist-ssr
 # Local env files
 *.env
 
+backend/.env
