@@ -7,7 +7,7 @@ Simple scheduler module for the Aegis Refinery Optimizer.
 
 import logging
 from datetime import datetime, timedelta
-from utils import parse_ldr_date, calculate_processing_rates
+from backend.core.utils import parse_ldr_date, calculate_processing_rates
 
 logger = logging.getLogger(__name__)
 

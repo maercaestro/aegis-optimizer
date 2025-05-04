@@ -7,11 +7,19 @@ Main entry point for the Aegis Refinery Optimizer.
 
 import json
 import logging
+import argparse
+import os
 from datetime import datetime
 
-from data_loader import load_input_data
+from backend.data_loader import load_input_data
 from backend.core.scheduler import SimpleScheduler
-from core.vessel_optimizer import VesselOptimizer
+from backend.core.vessel_optimizer import VesselOptimizer
+from backend.agent.base import OptimizerAgent
+from backend.agent.optimizer_tools import (
+    VesselOptimizationTool, 
+    LPOptimizationTool,
+    FullOptimizationTool
+)
 
 # Configure logging
 logging.basicConfig(
@@ -20,47 +28,233 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+def ensure_data_directories():
+    """Ensure all required data directories exist."""
+    # Get the project root directory (parent of backend)
+    project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    
+    # Define required data directories
+    data_dirs = [
+        os.path.join(project_dir, "data"),
+        os.path.join(project_dir, "data", "uploads"),
+        os.path.join(project_dir, "data", "results")
+    ]
+    
+    # Create directories if they don't exist
+    for directory in data_dirs:
+        os.makedirs(directory, exist_ok=True)
+        logger.debug(f"Ensured directory exists: {directory}")
+
 def main():
     """Main function to run the optimization process."""
+    # Ensure required directories exist
+    ensure_data_directories()
     
-    logger.info("Starting Aegis Refinery Optimizer")
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description="Aegis Refinery Optimizer")
+    parser.add_argument("--mode", choices=["standard", "vessel", "lp", "full"], default="standard",
+                       help="Optimization mode to run")
+    parser.add_argument("--input", default="data/input.json",
+                       help="Path to the input data file")
+    parser.add_argument("--loading", default="data/loading_date_ranges.json",
+                       help="Path to the loading date ranges file")
+    parser.add_argument("--schedule", 
+                       help="Path to an existing schedule file (for LP optimization)")
+    args = parser.parse_args()
+    
+    # Convert relative paths to absolute paths
+    project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    
+    if not os.path.isabs(args.input):
+        args.input = os.path.join(project_dir, args.input)
+    
+    if not os.path.isabs(args.loading):
+        args.loading = os.path.join(project_dir, args.loading)
+    
+    if args.schedule and not os.path.isabs(args.schedule):
+        args.schedule = os.path.join(project_dir, args.schedule)
+    
+    logger.info(f"Starting Aegis Refinery Optimizer in {args.mode} mode")
+    
+    if args.mode == "standard":
+        # Traditional pipeline without agent tools
+        run_standard_pipeline(args.input, args.loading)
+    else:
+        # Use agent tools for optimization
+        run_agent_pipeline(args)
+    
+    logger.info("Optimization completed")
+
+def run_standard_pipeline(input_file, loading_file):
+    """Run the traditional optimization pipeline without agent tools."""
+    # Check if input files exist
+    for file_path, file_desc in [(input_file, "input data"), (loading_file, "loading data")]:
+        if not os.path.exists(file_path):
+            logger.error(f"File not found: {file_path} ({file_desc})")
+            return
     
     # Load input data
-    input_data = load_input_data("data/input.json")
+    try:
+        input_data = load_input_data(input_file)
+        logger.info(f"Loaded input data from {input_file}")
+    except Exception as e:
+        logger.error(f"Failed to load input data: {str(e)}")
+        return
     
     # Run vessel optimization
     logger.info("Running vessel optimization")
-    vessel_optimizer = VesselOptimizer("data/loading_date_ranges.json")
-    optimization_result = vessel_optimizer.optimize()
-    
-    if optimization_result["status"] == "optimal":
-        logger.info(f"Vessel optimization successful: {optimization_result['vessel_count']} vessels, " 
-                   f"${optimization_result['freight_cost']:,.2f} freight cost")
+    try:
+        vessel_optimizer = VesselOptimizer(loading_file)
+        optimization_result = vessel_optimizer.optimize()
         
-        # Format vessels for scheduler
-        optimized_vessels = vessel_optimizer.format_vessels_for_scheduler(optimization_result)
-    else:
-        logger.warning("Vessel optimization failed, using default vessel allocation")
+        if optimization_result["status"] == "optimal":
+            logger.info(f"Vessel optimization successful: {optimization_result['vessel_count']} vessels, " 
+                      f"${optimization_result['freight_cost']:,.2f} freight cost")
+            
+            # Format vessels for scheduler
+            optimized_vessels = vessel_optimizer.format_vessels_for_scheduler(optimization_result)
+        else:
+            logger.warning(f"Vessel optimization failed: {optimization_result.get('message', 'Unknown error')}")
+            optimized_vessels = None
+            
+    except Exception as e:
+        logger.error(f"Error in vessel optimization: {str(e)}")
         optimized_vessels = None
     
     # Create a simple scheduler
-    scheduler = SimpleScheduler(input_data)
+    try:
+        scheduler = SimpleScheduler(input_data)
+        
+        # Run the simple scheduler with optimized vessels if available
+        if optimized_vessels:
+            logger.info("Using optimized vessel allocation for scheduling")
+            schedule = scheduler.generate_schedule(optimized_vessels)
+        else:
+            logger.info("Using default vessel allocation for scheduling")
+            schedule = scheduler.generate_schedule()
+        
+        # Output the schedule
+        print_schedule(schedule, optimization_result if optimized_vessels else None)
+        
+        # Save the schedule to a file
+        save_schedule(schedule, optimization_result if optimized_vessels else None)
+            
+    except Exception as e:
+        logger.error(f"Error in scheduling: {str(e)}")
+
+def run_agent_pipeline(args):
+    """Run optimization using the agent framework."""
+    # Create agent and register tools
+    agent = OptimizerAgent()
+    agent.register_tool(VesselOptimizationTool())
+    agent.register_tool(LPOptimizationTool())
+    agent.register_tool(FullOptimizationTool())
     
-    # Run the simple scheduler with optimized vessels if available
-    if optimized_vessels:
-        logger.info("Using optimized vessel allocation for scheduling")
-        schedule = scheduler.generate_schedule(optimized_vessels)
-    else:
-        logger.info("Using default vessel allocation for scheduling")
-        schedule = scheduler.generate_schedule()
-    
-    # Output the schedule
-    print_schedule(schedule, optimization_result if optimized_vessels else None)
-    
-    # Save the schedule to a file
-    save_schedule(schedule, optimization_result if optimized_vessels else None)
-    
-    logger.info("Optimization completed")
+    try:
+        if args.mode == "vessel":
+            # Check if loading file exists
+            if not os.path.exists(args.loading):
+                logger.error(f"Loading data file not found: {args.loading}")
+                return
+                
+            # Run vessel optimization only
+            logger.info("Running vessel optimization with agent")
+            result = agent.run_tool(
+                "VesselOptimizationTool",
+                loading_data_path=args.loading,
+                output_format="full"
+            )
+            
+            if result["status"] == "optimal":
+                logger.info(f"Vessel optimization successful: {result['vessel_count']} vessels, " 
+                          f"${result['freight_cost']:,.2f} freight cost")
+                
+                # Format for scheduler
+                vessel_optimizer = VesselOptimizer(args.loading)
+                optimized_vessels = vessel_optimizer.format_vessels_for_scheduler(result)
+                
+                # Check if input file exists
+                if not os.path.exists(args.input):
+                    logger.error(f"Input data file not found: {args.input}")
+                    return
+                
+                # Generate schedule with optimized vessels
+                input_data = load_input_data(args.input)
+                scheduler = SimpleScheduler(input_data)
+                schedule = scheduler.generate_schedule(optimized_vessels)
+                
+                # Output and save the schedule
+                print_schedule(schedule, result)
+                save_schedule(schedule, result)
+            else:
+                logger.error(f"Vessel optimization failed: {result.get('message', 'Unknown error')}")
+                
+        elif args.mode == "lp":
+            # Run LP optimization on an existing schedule
+            if not args.schedule:
+                logger.error("LP optimization requires a schedule file. Use --schedule to specify.")
+                return
+                
+            if not os.path.exists(args.schedule):
+                logger.error(f"Schedule file not found: {args.schedule}")
+                return
+                
+            logger.info(f"Running LP optimization with agent on {args.schedule}")
+            result = agent.run_tool(
+                "LPOptimizationTool",
+                schedule_file=args.schedule,
+                save_output=True
+            )
+            
+            if result["status"] == "optimal":
+                logger.info(f"LP optimization successful. Output saved to {result['output_file']}")
+                
+                # Load and print the optimized schedule
+                try:
+                    with open(result["output_file"], 'r') as f:
+                        optimized_schedule = json.load(f)
+                        
+                    print_schedule(optimized_schedule)
+                except Exception as e:
+                    logger.error(f"Error loading optimized schedule: {str(e)}")
+            else:
+                logger.error(f"LP optimization failed: {result.get('message', 'Unknown error')}")
+                
+        elif args.mode == "full":
+            # Check if input files exist
+            for file_path, file_desc in [(args.input, "input data"), (args.loading, "loading data")]:
+                if not os.path.exists(file_path):
+                    logger.error(f"File not found: {file_path} ({file_desc})")
+                    return
+                    
+            # Run full optimization pipeline
+            logger.info("Running full optimization pipeline with agent")
+            result = agent.run_tool(
+                "FullOptimizationTool",
+                loading_data_path=args.loading,
+                input_data_path=args.input,
+                save_output=True
+            )
+            
+            if result["status"] == "optimal":
+                logger.info("Full optimization successful")
+                logger.info(f"Vessel optimization: {result['vessel_optimization']['vessel_count']} vessels, "
+                          f"${result['vessel_optimization']['freight_cost']:,.2f} freight cost")
+                
+                # Load and print the final optimized schedule
+                try:
+                    lp_result = result["lp_optimization"]
+                    with open(lp_result["output_file"], 'r') as f:
+                        final_schedule = json.load(f)
+                        
+                    print_schedule(final_schedule, result["vessel_optimization"])
+                except Exception as e:
+                    logger.error(f"Error loading optimized schedule: {str(e)}")
+            else:
+                logger.error(f"Full optimization failed: {result.get('message', 'Unknown error')}")
+                logger.error(f"Stage: {result.get('stage', 'unknown')}")
+    except Exception as e:
+        logger.error(f"Error in agent pipeline: {str(e)}")
 
 def print_schedule(schedule, vessel_optimization=None):
     """Print the schedule in a readable format."""
@@ -168,11 +362,18 @@ def save_schedule(schedule, vessel_optimization=None):
     # Create timestamp for the filename
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
-    # Timestamped output file
-    output_file = f"data/schedule_output_{timestamp}.json"
+    # Get the project root directory
+    project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     
-    # Fixed output file (always overwritten with latest)
-    fixed_output_file = "data/latest_schedule_output.json"
+    # Ensure data directory exists
+    data_dir = os.path.join(project_dir, "data")
+    os.makedirs(data_dir, exist_ok=True)
+    
+    # Timestamped output file with absolute path
+    output_file = os.path.join(data_dir, f"schedule_output_{timestamp}.json")
+    
+    # Fixed output file with absolute path
+    fixed_output_file = os.path.join(data_dir, "latest_schedule_output.json")
     
     # Add vessel optimization results if available
     if vessel_optimization:
@@ -194,4 +395,5 @@ def save_schedule(schedule, vessel_optimization=None):
     return output_file
 
 if __name__ == "__main__":
+    ensure_data_directories()
     main()
