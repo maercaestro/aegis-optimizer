@@ -10,12 +10,34 @@ import json
 import os
 from dotenv import load_dotenv
 import logging
-
+import sys
+from pathlib import Path
+import tempfile
 
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from openai import OpenAI
+
+# Remove any existing code that manipulates sys.path
+import os
+import sys
+from pathlib import Path
+
+# Add core directly to the path
+core_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "core"))
+sys.path.insert(0, core_path)  # insert at beginning for higher priority
+
+# Now try the imports
+try:
+    from lp_optimizer import LPOptimizer
+    from scheduler import SimpleScheduler
+    print(f"Successfully imported LPOptimizer and SimpleScheduler from {core_path}")
+except ImportError as e:
+    print(f"ERROR: Failed to import from core directory: {e}")
+    print(f"Python path: {sys.path}")
+    print(f"Files in core directory: {os.listdir(core_path)}")
+    sys.exit(1)  # Exit if imports fail
 
 # Load environment variables
 load_dotenv()
@@ -27,6 +49,7 @@ logger = logging.getLogger(__name__)
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+print("Flask app initialized")
 
 # Initialize OpenAI client
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
@@ -712,14 +735,14 @@ def format_tool_results(tool_results):
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    """MCP-compliant chat endpoint"""
+    """Chat endpoint using OpenAI function calling"""
     global current_schedule_data
     try:
-        # Add schedule data validation
+        # Check if schedule data is available
         if not current_schedule_data:
-            print("WARNING: No schedule data available")
-        else:
-            print(f"Schedule data keys: {list(current_schedule_data.keys())}")
+            return jsonify({
+                "response": "I don't have any schedule data loaded yet. Please upload your schedule data first."
+            })
         
         data = request.json
         messages = data.get('messages', [])
@@ -730,139 +753,358 @@ def chat():
             
         user_query = messages[-1]['content']
         
-        # STEP 1: Planning phase (internal only, not shown to user)
-        # This follows the JSON-RPC format from MCP schema
-        planning_request = {
-            "jsonrpc": "2.0",
-            "id": f"plan-{datetime.now().timestamp()}",
-            "method": "internal/planning",
-            "params": {
-                "query": user_query,
-                "_meta": {
-                    "source": "user_chat"
+        # Define functions based on our server capabilities
+        functions = []
+        
+        # Day Processing Analyzer functions
+        functions.extend([
+            {
+                "name": "findLowestProcessingDay",
+                "description": "Find the day with the lowest processing rate",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            },
+            {
+                "name": "findHighestProcessingDay",
+                "description": "Find the day with the highest processing rate",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            },
+            {
+                "name": "compareDays",
+                "description": "Compare processing rates between two days",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "day1": {"type": "string", "description": "First day to compare"},
+                        "day2": {"type": "string", "description": "Second day to compare"}
+                    },
+                    "required": ["day1", "day2"]
+                }
+            },
+            {
+                "name": "getAverageProcessingRates",
+                "description": "Calculate average processing rates by grade and overall",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            },
+            {
+                "name": "analyzeProcessingTrends",
+                "description": "Analyze trends in processing volumes over time",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
                 }
             }
-        }
+        ])
         
-        # Generate the MCP system prompt
-        system_prompt = generate_mcp_prompt()
+        # Vessel Tracker functions
+        functions.extend([
+            {
+                "name": "getVesselSchedule",
+                "description": "Get the schedule of all vessels",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            },
+            {
+                "name": "getVesselCargo",
+                "description": "Get cargo details for a specific vessel",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "vesselId": {"type": "string", "description": "ID of the vessel"}
+                    },
+                    "required": ["vesselId"]
+                }
+            },
+            {
+                "name": "findVesselByDay",
+                "description": "Find vessels arriving on a specific day",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "day": {"type": "string", "description": "Day to check for vessels"}
+                    },
+                    "required": ["day"]
+                }
+            }
+        ])
         
-        # Create the planning messages
-        planning_messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"Question: {user_query}\n\nAnalyze this question and determine which MCP tools to use. Follow the MCP protocol strictly."}
+        # Tank Manager functions
+        functions.extend([
+            {
+                "name": "getTankCapacities",
+                "description": "Get capacities for all tanks",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            },
+            {
+                "name": "getTankContents",
+                "description": "Get contents of a specific tank on a specific day",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "tankName": {"type": "string", "description": "Name of the tank"},
+                        "day": {"type": "string", "description": "Day to check"}
+                    },
+                    "required": ["tankName", "day"]
+                }
+            },
+            {
+                "name": "checkTankUtilization",
+                "description": "Check utilization of tanks across the schedule",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            }
+        ])
+        
+        # Grade Processor functions
+        functions.extend([
+            {
+                "name": "getGradeVolumes",
+                "description": "Get total volumes for all grades",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+            },
+            {
+                "name": "compareGrades",
+                "description": "Compare processing volumes between two grades",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "grade1": {"type": "string", "description": "First grade to compare"},
+                        "grade2": {"type": "string", "description": "Second grade to compare"}
+                    },
+                    "required": ["grade1", "grade2"]
+                }
+            },
+            {
+                "name": "trackGradeByDay",
+                "description": "Track processing of a specific grade across days",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "grade": {"type": "string", "description": "Name of the grade to track"}
+                    },
+                    "required": ["grade"]
+                }
+            }
+        ])
+        
+        # Add this to your existing function calling setup
+        function_definitions = [
+            {
+                "name": "optimize_schedule_lp",
+                "description": "Optimize the refinery schedule using linear programming to maximize throughput and optimize crude blending",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "min_threshold": {
+                            "type": "number",
+                            "description": "Minimum daily processing rate threshold in kb/day (default: 80.0)"
+                        },
+                        "max_daily_change": {
+                            "type": "number",
+                            "description": "Maximum allowed change in processing rate between consecutive days in kb (default: 10.0)"
+                        }
+                    },
+                    "required": []
+                }
+            },
         ]
         
-        # Call OpenAI API for tool planning
-        try:
-            plan_response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=planning_messages,
-                temperature=0.5,
-                max_tokens=1000
-            )
+        # Create system message
+        system_message = """You are an assistant specialized in refinery scheduling data analysis. 
+You have access to functions that can analyze various aspects of the refinery schedule.
+Use these functions to provide the most accurate and helpful information to the user.
+When using numerical values in your response, format them to 2 decimal places for readability.
+Do not mention the function names in your responses - provide natural, conversational answers."""
+        
+        # Prepare messages for the API call
+        api_messages = [
+            {"role": "system", "content": system_message}
+        ]
+        
+        # Include previous messages if any
+        for msg in messages:
+            if msg['role'] in ['user', 'assistant']:
+                api_messages.append(msg)
+        
+        # Make the initial call to OpenAI API with function definitions
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=api_messages,
+            tools=[{"type": "function", "function": func} for func in functions],
+            tool_choice="auto"
+        )
+        
+        # Check if the model wants to call a function
+        response_message = response.choices[0].message
+        
+        # If there are function calls
+        if response_message.tool_calls:
+            # Store the model's response
+            api_messages.append({"role": "assistant", "content": response_message.content, "tool_calls": response_message.tool_calls})
             
-            plan_text = plan_response.choices[0].message.content
-            
-            # Extract tool calls from the plan (internal use only)
-            tool_calls = extract_tool_calls(plan_text)
-            
-            if not tool_calls:
-                # No tool calls found, return a direct response
-                response_messages = [
-                    {"role": "system", "content": "You are a helpful assistant. Answer the user's question directly."},
-                    {"role": "user", "content": user_query}
-                ]
+            # Process each tool call
+            for tool_call in response_message.tool_calls:
+                function_name = tool_call.function.name
+                function_args = json.loads(tool_call.function.arguments)
                 
-                direct_response = client.chat.completions.create(
-                    model="gpt-4o",
-                    messages=response_messages,
-                    temperature=0.7,
-                    max_tokens=1000
-                )
+                # Execute the function
+                function_result = execute_function(function_name, function_args)
                 
-                return jsonify({
-                    "response": direct_response.choices[0].message.content
+                # Add the function result to the messages
+                api_messages.append({
+                    "tool_call_id": tool_call.id,
+                    "role": "tool",
+                    "name": function_name,
+                    "content": json.dumps(function_result)
                 })
             
-            # STEP 2: Tool execution (internal)
-            # Format following MCP CallToolRequest
-            tool_results = []
-            for call in tool_calls:
-                mcp_tool_request = {
-                    "method": "tools/call",
-                    "params": {
-                        "name": f"{call['server']}.{call['capability']}",
-                        "arguments": call['params']
-                    }
-                }
-                
-                # Execute the tool call
-                if call['server'] in mcp_servers:
-                    server = mcp_servers[call['server']]
-                    if call['capability'] in server.capabilities:
-                        result = server.execute(call['capability'], call['params'], current_schedule_data)
-                        
-                        # Format according to MCP CallToolResult
-                        tool_result = {
-                            "content": [{
-                                "type": "text",
-                                "text": json.dumps(result, indent=2)
-                            }],
-                            "isError": "error" in result
-                        }
-                        
-                        tool_results.append({
-                            "call": mcp_tool_request,
-                            "result": tool_result
-                        })
-            
-            # STEP 3: Response generation (shown to user)
-            # Format tool results for consumption
-            formatted_results = ""
-            for tr in tool_results:
-                if not tr["result"]["isError"]:
-                    formatted_results += f"Tool {tr['call']['params']['name']} returned:\n"
-                    try:
-                        # Get the text content
-                        content_text = tr["result"]["content"][0]["text"]
-                        result_obj = json.loads(content_text)
-                        if "result" in result_obj:
-                            formatted_results += f"{result_obj['result']}\n\n"
-                        else:
-                            formatted_results += f"{content_text}\n\n"
-                    except:
-                        formatted_results += f"{tr['result']['content'][0]['text']}\n\n"
-            
-            # Generate final response WITHOUT showing the planning
-            response_messages = [
-                {"role": "system", "content": "You're a helpful assistant that explains refinery scheduling data. IMPORTANT: Respond DIRECTLY to the user's question using the provided data WITHOUT mentioning the tools used or any internal reasoning processes. Do not refer to any tools, analyzers, or the MCP protocol in your response. Present the information as if you analyzed the data directly."},
-                {"role": "user", "content": f"Question: {user_query}\n\nData: {formatted_results}\n\nProvide a direct, natural-sounding answer."}
-            ]
-            
-            final_response = client.chat.completions.create(
+            # Make a second call to OpenAI with the function results
+            second_response = client.chat.completions.create(
                 model="gpt-4o",
-                messages=response_messages,
-                temperature=0.7,
-                max_tokens=1000
+                messages=api_messages
             )
             
+            # Get the final response
+            final_response = second_response.choices[0].message.content
+            
             return jsonify({
-                "response": final_response.choices[0].message.content
+                "response": final_response
+            })
+        else:
+            # If no function was called, return the response directly
+            return jsonify({
+                "response": response_message.content
             })
             
-        except Exception as e:
-            logger.error(f"Error in MCP chat flow: {str(e)}")
-            return jsonify({"error": f"Error processing request: {str(e)}"}), 500
-        
     except Exception as e:
         logger.error(f"Error in chat endpoint: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
+# Helper function to execute the appropriate function based on name
+def execute_function(function_name, args):
+    """Execute a function by name with the given arguments"""
+    global current_schedule_data
+    
+    try:
+        # Map function names to their implementations
+        function_map = {
+            # Day Processing Analyzer
+            "findLowestProcessingDay": lambda: mcp_servers["dayAnalyzer"].findLowestProcessingDay({}, current_schedule_data),
+            "findHighestProcessingDay": lambda: mcp_servers["dayAnalyzer"].findHighestProcessingDay({}, current_schedule_data),
+            "compareDays": lambda: mcp_servers["dayAnalyzer"].compareDays(args, current_schedule_data),
+            "getAverageProcessingRates": lambda: mcp_servers["dayAnalyzer"].getAverageProcessingRates({}, current_schedule_data),
+            "analyzeProcessingTrends": lambda: mcp_servers["dayAnalyzer"].analyzeProcessingTrends({}, current_schedule_data),
+            
+            # Vessel Tracker
+            "getVesselSchedule": lambda: mcp_servers["vesselTracker"].getVesselSchedule({}, current_schedule_data),
+            "getVesselCargo": lambda: mcp_servers["vesselTracker"].getVesselCargo(args, current_schedule_data),
+            "findVesselByDay": lambda: mcp_servers["vesselTracker"].findVesselByDay(args, current_schedule_data),
+            
+            # Tank Manager
+            "getTankCapacities": lambda: mcp_servers["tankManager"].getTankCapacities({}, current_schedule_data),
+            "getTankContents": lambda: mcp_servers["tankManager"].getTankContents(args, current_schedule_data),
+            "checkTankUtilization": lambda: mcp_servers["tankManager"].checkTankUtilization({}, current_schedule_data),
+            
+            # Grade Processor
+            "getGradeVolumes": lambda: mcp_servers["gradeProcessor"].getGradeVolumes({}, current_schedule_data),
+            "compareGrades": lambda: mcp_servers["gradeProcessor"].compareGrades(args, current_schedule_data),
+            "trackGradeByDay": lambda: mcp_servers["gradeProcessor"].trackGradeByDay(args, current_schedule_data),
+            
+            # Add this to your existing function calling setup
+            "optimize_schedule_lp": lambda: _execute_lp_optimizer(args),
+        }
+        
+        # Check if the function exists in our map
+        if function_name not in function_map:
+            return {"error": f"Function {function_name} not implemented"}
+        
+        # Execute the function
+        print(f"Executing function {function_name} with args {args}")
+        result = function_map[function_name]()
+        print(f"Function result: {result}")
+        
+        return result
+        
+    except Exception as e:
+        print(f"Error executing function {function_name}: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return {"error": str(e)}
+
+# Add these routes for schedule data management
 @app.route('/upload-schedule', methods=['POST'])
 def upload_schedule():
+    """Handle schedule data upload from frontend"""
+    global current_schedule_data
+    try:
+        # Get JSON data from request
+        if not request.is_json:
+            return jsonify({"error": "Expected JSON data"}), 400
+            
+        schedule_data = request.json
+        if not schedule_data:
+            return jsonify({"error": "No schedule data provided"}), 400
+            
+        # Store the data
+        current_schedule_data = schedule_data
+        
+        # Add timestamp for reference
+        current_schedule_data["_timestamp"] = datetime.now().isoformat()
+        
+        logger.info(f"Uploaded schedule data with keys: {list(current_schedule_data.keys())}")
+        
+        return jsonify({
+            "message": "Schedule data uploaded successfully",
+            "timestamp": current_schedule_data["_timestamp"]
+        })
+    except Exception as e:
+        logger.error(f"Error uploading schedule data: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/status', methods=['GET'])
+def check_status():
+    """Check if schedule data is loaded"""
+    global current_schedule_data
+    
+    return jsonify({
+        "status": "ready",
+        "has_schedule_data": current_schedule_data is not None,
+        "timestamp": current_schedule_data.get("_timestamp", None) if current_schedule_data else None,
+        "data_keys": list(current_schedule_data.keys()) if current_schedule_data else []
+    })
+
+@app.route('/upload-schedule-file', methods=['POST'])
+def upload_schedule_file():  # Changed function name
     """Upload a schedule JSON file"""
-    global current_schedule_data  # Add this line at the beginning
+    global current_schedule_data
     try:
         if 'file' not in request.files:
             return jsonify({"error": "No file part"}), 400
@@ -988,218 +1230,192 @@ def get_results_file(filename):
         logger.error(f"Error retrieving schedule: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/status', methods=['GET'])
-def status():
-    """Simple endpoint to check if API is running"""
-    return jsonify({
-        "status": "online",
-        "timestamp": datetime.now().isoformat(),
-        "has_schedule_data": current_schedule_data is not None
-    })
-
-# Add this new endpoint for more flexible queries
-
-@app.route('/smart-query', methods=['POST'])
-def smart_query():
-    """More flexible query endpoint that tries to match user questions to capabilities"""
+@app.route('/generate-schedule-with-program', methods=['POST'])
+def generate_schedule_with_program():
+    """Generate a schedule based on a custom feedstock delivery program"""
     global current_schedule_data
     try:
+        if not request.is_json:
+            return jsonify({"error": "Expected JSON data"}), 400
+            
         data = request.json
-        query = data.get('query', '')
+        feedstock_program = data.get('feedstock_delivery_program', [])
         
-        if not query:
-            return jsonify({"error": "No query provided"}), 400
-            
-        if not current_schedule_data:
-            return jsonify({"error": "No schedule data available"}), 400
+        if not feedstock_program:
+            return jsonify({"error": "No feedstock delivery program provided"}), 400
         
-        # Use OpenAI to decide which capability to call
-        system_prompt = """You are a query router for a refinery scheduling system. 
-Given a user query, determine the most appropriate API call from the following options:
-
-1. dayAnalyzer.findLowestProcessingDay({}) - Find the day with lowest processing
-2. dayAnalyzer.findHighestProcessingDay({}) - Find the day with highest processing
-3. dayAnalyzer.compareDays({"day1": "1", "day2": "2"}) - Compare two specific days
-4. dayAnalyzer.getAverageProcessingRates({}) - Get average processing rates by grade and overall
-5. dayAnalyzer.analyzeProcessingTrends({}) - Analyze trends in processing over time
-6. vesselTracker.getVesselSchedule({}) - Get all vessel schedules
-7. vesselTracker.getVesselCargo({"vesselId": "1"}) - Get cargo for a specific vessel
-8. vesselTracker.findVesselByDay({"day": "1"}) - Find vessels arriving on a specific day
-9. tankManager.getTankCapacities({}) - Get all tank capacities
-10. tankManager.getTankContents({"tankName": "Tank1", "day": "1"}) - Get contents of a specific tank
-11. tankManager.checkTankUtilization({}) - Check utilization of tanks across schedule
-12. gradeProcessor.getGradeVolumes({}) - Get total volumes for all grades
-13. gradeProcessor.compareGrades({"grade1": "A", "grade2": "B"}) - Compare two grades
-14. gradeProcessor.trackGradeByDay({"grade": "A"}) - Track processing of a specific grade by day
-
-Return just the API call as JSON without any explanation."""
-
-        try:
-            router_response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": f"Query: {query}"}
-                ],
-                response_format={"type": "json_object"},
-                temperature=0.3,
-                max_tokens=150
-            )
-            
-            router_text = router_response.choices[0].message.content
-            router_decision = json.loads(router_text)
-            
-            # Extract server, capability and params
-            for key, value in router_decision.items():
-                if "." in key:
-                    server_id, capability = key.split(".")
-                    params = value
-                    
-                    if server_id not in mcp_servers:
-                        return jsonify({"error": f"Server {server_id} not found"}), 400
-                    
-                    server = mcp_servers[server_id]
-                    if capability not in server.capabilities:
-                        return jsonify({"error": f"Capability {capability} not found in {server_id}"}), 400
-                    
-                    # Execute the capability
-                    result = server.execute(capability, params, current_schedule_data)
-                    
-                    # Generate a natural language response
-                    if "error" in result:
-                        return jsonify({"error": result["error"]}), 400
-                    
-                    nlg_response = client.chat.completions.create(
-                        model="gpt-4o",
-                        messages=[
-                            {"role": "system", "content": "You are a helpful assistant that explains refinery scheduling data. Use a conversational, helpful tone."},
-                            {"role": "user", "content": f"Original query: {query}\nData result: {json.dumps(result, indent=2)}\n\nCreate a natural-sounding response that answers the query using this data."}
-                        ],
-                        temperature=0.7,
-                        max_tokens=400
-                    )
-                    
-                    return jsonify({
-                        "response": nlg_response.choices[0].message.content,
-                        "data": result,
-                        "meta": {
-                            "server": server_id,
-                            "capability": capability,
-                            "params": params
-                        }
-                    })
+        # Load the default input data template
+        input_data_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "input.json")
+        with open(input_data_path, 'r') as f:
+            input_data = json.load(f)
         
-        except Exception as e:
-            logger.error(f"Error in router: {str(e)}")
-            # Fall back to the regular chat endpoint
-            pass
+        # Replace the feedstock delivery program in the input data
+        input_data["feedstock_delivery_program"] = feedstock_program
         
-        # If we get here, the router failed or couldn't decide
-        # Create a proper internal call instead of directly calling chat()
-        messages = [{"role": "user", "content": query}]
-        system_prompt = generate_mcp_prompt()
-
-        formatted_messages = [
-            {"role": "system", "content": system_prompt}
-        ]
-        formatted_messages.extend(messages)
-
-        # Call OpenAI API with these messages instead
-        try:
-            response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=formatted_messages,
-                temperature=0.7,
-                max_tokens=1000
-            )
-            
+        # Check if volume is sufficient
+        total_volume = sum(sum(grade.get('parcel_sizes_kb', [0])) for grade in feedstock_program)
+        required_volume = 30 * 80  # 30 days at 80 kb/day
+        
+        if total_volume < required_volume:
             return jsonify({
-                "response": response.choices[0].message.content
-            })
-        except Exception as e:
-            logger.error(f"Error in fallback chat: {str(e)}")
-            return jsonify({"error": str(e)}), 500
+                "error": f"Insufficient crude volume. Need {required_volume}kb, but only have {total_volume}kb.",
+                "isSufficient": False,
+                "totalVolume": total_volume,
+                "requiredVolume": required_volume,
+                "shortfall": required_volume - total_volume
+            }), 400
+        
+        # Import the scheduler (make sure it's in your path)
+        from scheduler import SimpleScheduler
+        
+        # Create and run the scheduler
+        scheduler = SimpleScheduler(input_data)
+        schedule_result = scheduler.generate_schedule()
+        
+        # Store the generated schedule in the current_schedule_data
+        current_schedule_data = schedule_result
+        
+        # Add timestamp
+        current_schedule_data["_timestamp"] = datetime.now().isoformat()
+        
+        return jsonify(schedule_result)
     
     except Exception as e:
-        logger.error(f"Error in smart query: {str(e)}")
+        logger.error(f"Error generating schedule: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
-
-
-# Print startup information
-print(f"Starting Aegis API on port {int(os.environ.get('PORT', 5001))}")
-print(f"API Key configured: {'Yes' if os.environ.get('OPENAI_API_KEY') else 'No'}")
-print(f"Data directory: {os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'results')}")
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5001)), debug=True)
-
-# Add these new endpoints for MCP client interaction
-
-@app.route('/mcp/capabilities', methods=['GET'])
-def get_mcp_capabilities():
-    """Get all MCP server capabilities"""
-    capabilities = {}
+def _execute_lp_optimizer(args):
+    """Internal function to run the LP optimizer"""
+    global current_schedule_data
     
-    for server_id, server in mcp_servers.items():
-        desc = server.get_description()
-        capabilities[server_id] = {
-            "name": desc["name"],
-            "description": desc["description"],
-            "capabilities": desc["capabilities"]
+    if not current_schedule_data:
+        return {
+            "status": "error",
+            "result": "No schedule data available to optimize"
         }
     
-    return jsonify(capabilities)
+    # Get parameters from args
+    min_threshold = args.get('min_threshold', 80.0)
+    max_daily_change = args.get('max_daily_change', 10.0)
+    
+    try:
+        # Store original processing rates for comparison
+        original_rates = {}
+        for day, day_plan in current_schedule_data["daily_plan"].items():
+            original_rates[day] = day_plan.get("processing_rates", {})
 
-@app.route('/mcp/execute', methods=['POST'])
-def execute_mcp_request():
-    """Execute an MCP capability request"""
+        # Store in the schedule for reference
+        current_schedule_data["_original_processing_rates"] = original_rates
+        
+        # Save current schedule to a temporary file
+        with tempfile.NamedTemporaryFile(suffix='.json', delete=False, mode='w') as tmp:
+            json.dump(current_schedule_data, tmp)
+            tmp_path = tmp.name
+        
+        # Run optimization
+        optimizer = LPOptimizer(tmp_path)
+        optimized_schedule = optimizer.optimize(min_threshold, max_daily_change)
+        
+        # Clean up temp file
+        os.unlink(tmp_path)
+        
+        # Update the current schedule data
+        current_schedule_data = optimized_schedule
+        
+        # Add metadata
+        current_schedule_data["_timestamp"] = datetime.now().isoformat()
+        current_schedule_data["_optimization"] = {
+            "method": "LP",
+            "min_threshold": min_threshold,
+            "max_daily_change": max_daily_change,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        # Save to persistent file
+        output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+        os.makedirs(output_dir, exist_ok=True)
+        output_file = os.path.join(output_dir, "latest_schedule_output.json")
+        
+        with open(output_file, 'w') as f:
+            json.dump(current_schedule_data, f, indent=2)
+            
+        logger.info(f"AI Assistant: Saved LP optimized schedule to {output_file}")
+        
+        # Calculate improvement metrics for reporting
+        before_total = sum(sum(values.values()) for day, values in
+                          current_schedule_data.get("_original_processing_rates", {}).items())
+        after_total = sum(sum(day_plan["processing_rates"].values()) 
+                         for day, day_plan in current_schedule_data["daily_plan"].items())
+        
+        return {
+            "status": "success",
+            "result": f"Schedule optimized successfully using Linear Programming. Processing volume improved from {before_total:.1f}kb to {after_total:.1f}kb.",
+            "metrics": {
+                "before_total": before_total,
+                "after_total": after_total,
+                "improvement": after_total - before_total
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in LP optimizer: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "status": "error",
+            "result": f"LP optimization failed: {str(e)}"
+        }
+
+@app.route('/optimize-schedule', methods=['POST'])
+def optimize_schedule():
+    """Run the LP optimizer on the current schedule"""
     global current_schedule_data
     try:
-        data = request.json
-        request_id = data.get('requestId')
-        server_id = data.get('serverId')
-        capability_id = data.get('capabilityId')
-        params = data.get('params', {})
-        
-        if not request_id or not server_id or not capability_id:
-            return jsonify({
-                "status": "error",
-                "message": "Missing required fields: requestId, serverId, or capabilityId"
-            }), 400
-        
         if not current_schedule_data:
             return jsonify({
-                "status": "error",
-                "message": "No schedule data available"
+                "status": "error", 
+                "message": "No schedule data available to optimize"
             }), 400
         
-        if server_id not in mcp_servers:
+        # Get optimization parameters from request
+        data = request.json or {}
+        min_threshold = data.get('min_threshold', 80.0)
+        max_daily_change = data.get('max_daily_change', 10.0)
+        
+        # Use our existing function
+        result = _execute_lp_optimizer({
+            'min_threshold': min_threshold,
+            'max_daily_change': max_daily_change
+        })
+        
+        if result["status"] == "error":
             return jsonify({
                 "status": "error",
-                "message": f"Server {server_id} not found"
-            }), 404
-        
-        server = mcp_servers[server_id]
-        if capability_id not in server.capabilities:
-            return jsonify({
-                "status": "error",
-                "message": f"Capability {capability_id} not found in server {server_id}"
-            }), 404
-        
-        # Execute the capability
-        result = server.execute(capability_id, params, current_schedule_data)
+                "message": result["result"]
+            }), 500
         
         return jsonify({
-            "requestId": request_id,
-            "status": "success" if "error" not in result else "error",
-            "result": result,
-            "timestamp": datetime.now().isoformat()
+            "status": "success",
+            "message": result["result"],
+            "schedule": current_schedule_data,
+            "metrics": result.get("metrics", {})
         })
     
     except Exception as e:
-        logger.error(f"Error executing MCP request: {str(e)}")
+        logger.error(f"Error optimizing schedule: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({
             "status": "error",
-            "message": str(e)
+            "message": f"Failed to optimize schedule: {str(e)}"
         }), 500
+
+# Add this at the very end of your app.py file
+if __name__ == '__main__':
+    print("Starting Flask server on port 5001...")
+    app.run(host='0.0.0.0', port=5001, debug=True)
+
+
+

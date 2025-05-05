@@ -1,59 +1,111 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import api from '../services/api';
-import MCPClient from './MCPClient';
 
 const ChatBox = ({ scheduleData }) => {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: 'Hello! I can help you analyze the schedule data. What would you like to know?'
+      content: 'Hello! I can help you analyze the schedule data and suggest optimizations. You can ask me about vessels, tanks, processing rates, or say "optimize the schedule" to run the LP optimizer.'
     }
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   
   // Store indexed schedule data for retrieval
   const [indexedData, setIndexedData] = useState(null);
   
-  // MCP servers configuration
-  const mcpServers = {
-    dayAnalyzer: {
-      name: "Day Processing Analyzer",
-      description: "Analyzes processing rates across days",
-      capabilities: ["findLowestProcessingDay", "findHighestProcessingDay", "compareDays"]
-    },
-    vesselTracker: {
-      name: "Vessel Tracker",
-      description: "Tracks vessel arrivals and cargo contents",
-      capabilities: ["getVesselSchedule", "getVesselCargo", "findVesselByDay"]
-    },
-    tankManager: {
-      name: "Tank Inventory Manager",
-      description: "Manages tank capacities and contents",
-      capabilities: ["getTankCapacities", "getTankContents", "checkTankUtilization"]
-    },
-    gradeProcessor: {
-      name: "Crude Grade Processor",
-      description: "Analyzes crude grade processing",
-      capabilities: ["getGradeVolumes", "compareGrades", "trackGradeByDay"]
+  // Track if backend has received the schedule data
+  const [backendHasSchedule, setBackendHasSchedule] = useState(false);
+
+  // Auto-scroll to bottom of chat
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // Auto-scroll to bottom of chat when new messages arrive
+  useEffect(() => {
+    if (!chatContainerRef.current || !messagesEndRef.current) return;
+    
+    // Calculate if we should auto-scroll
+    const container = chatContainerRef.current;
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    
+    // Only auto-scroll if user is already near the bottom (within 100px)
+    const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+    
+    // Auto-scroll if the last message is from the AI or if user was already at bottom
+    const lastMessage = messages[messages.length - 1];
+    const shouldAutoScroll = 
+      isNearBottom || 
+      lastMessage?.role === 'assistant' || 
+      messages.length <= 1;
+      
+    if (shouldAutoScroll) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, [messages]);
 
   // Create indexed data from schedule data when component mounts or scheduleData changes
   useEffect(() => {
     if (scheduleData) {
       createIndexedData();
+      sendScheduleDataToServer();
     }
   }, [scheduleData]);
-
-  // Scroll to bottom of messages when new messages are added
+  
+  // Check if backend has schedule data
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    const checkServerStatus = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/status');
+        if (response.ok) {
+          const data = await response.json();
+          setBackendHasSchedule(data.has_schedule_data);
+        }
+      } catch (error) {
+        console.error('Error checking server status:', error);
+      }
+    };
+    
+    checkServerStatus();
+    // Check periodically
+    const interval = setInterval(checkServerStatus, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
-  // Create indexed data from schedule for RAG implementation
+  // Send schedule data to server
+  const sendScheduleDataToServer = async () => {
+    if (!scheduleData) return;
+    
+    try {
+      console.log('Sending schedule data to Flask API...');
+      const response = await fetch('http://localhost:5001/upload-schedule', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(scheduleData)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to upload schedule data: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      console.log('Schedule data uploaded successfully:', result);
+      toast.success('Schedule data uploaded to AI');
+      setBackendHasSchedule(true);
+    } catch (error) {
+      console.error('Error uploading schedule data:', error);
+      toast.error('Failed to upload schedule data to AI');
+    }
+  };
+
+  // Create indexed data from schedule for RAG implementation (local fallback)
   const createIndexedData = () => {
     if (!scheduleData) return;
     
@@ -389,126 +441,86 @@ const ChatBox = ({ scheduleData }) => {
     return { error: `Capability ${capability} not implemented for ${server}` };
   };
 
+  // Handle sending messages - Updated to use Flask API with fallback
   const handleSendMessage = async () => {
     if (!input.trim()) return;
 
-    // Add user message to chat
     const userMessage = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsTyping(true);
 
     try {
-      // Before first API call, ensure schedule data is sent to backend if needed
-      if (scheduleData && !backendHasSchedule.current) {
-        try {
-          const setScheduleResponse = await fetch('http://localhost:5001/set-schedule', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(scheduleData)
-          });
-          
-          if (setScheduleResponse.ok) {
-            backendHasSchedule.current = true;
-          }
-        } catch (error) {
-          console.error('Error setting schedule data:', error);
-        }
-      }
-
-      // Try smart query endpoint first
-      let response = await fetch('http://localhost:5001/smart-query', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          query: input
-        })
-      });
-
-      // If smart query fails, fall back to regular chat
-      if (!response.ok) {
-        const conversation = messages.map(msg => ({
-          role: msg.role,
-          content: msg.content
-        }));
-        conversation.push(userMessage);
-
-        response = await fetch('http://localhost:5001/chat', {
+      // First try the Flask API with OpenAI function calling
+      if (backendHasSchedule) {
+        const apiResponse = await fetch('http://localhost:5001/chat', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            messages: conversation
+            messages: [...messages, userMessage]
           })
         });
+        
+        if (apiResponse.ok) {
+          const result = await apiResponse.json();
+          console.log('Received API response:', result);
+          
+          setMessages(prev => [...prev, { 
+            role: 'assistant', 
+            content: result.response,
+            source: 'api'
+          }]);
+          setIsTyping(false);
+          return;
+        } else {
+          console.warn('API response not OK, falling back to local processing');
+        }
+      } else {
+        console.log('Backend does not have schedule data, using local processing');
       }
-
-      if (!response.ok) {
-        throw new Error('Failed to get response from API');
-      }
-
-      const data = await response.json();
       
-      // Add assistant response to chat
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: data.response || 'I processed your request but couldn\'t generate a response.'
-      }]);
+      // Fallback to local RAG implementation
+      if (indexedData) {
+        const localResponse = retrieveRelevantData(input);
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: localResponse,
+          source: 'local'
+        }]);
+      } else {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: "I don't have any schedule data to analyze yet. Please make sure schedule data is loaded.",
+          source: 'local',
+          error: true
+        }]);
+      }
     } catch (error) {
-      console.error('Error sending message:', error);
-      toast.error('Failed to get response from AI');
+      console.error('Error in chat:', error);
       
-      // Add error message
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: 'Sorry, I encountered an error while processing your request. Please try again later.',
-        error: true
-      }]);
+      // Try local fallback if API failed
+      if (indexedData) {
+        const localResponse = retrieveRelevantData(input);
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: `API error - falling back to local processing:\n\n${localResponse}`,
+          source: 'local'
+        }]);
+      } else {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: `Sorry, I encountered an error: ${error.message}`,
+          error: true
+        }]);
+      }
     } finally {
       setIsTyping(false);
     }
   };
   
-  // Properly create an MCPClient instance with the new class
-  const mcpClient = useMemo(() => 
-    new MCPClient({ 
-      apiEndpoint: 'http://localhost:5001',
-      onMessage: (message) => console.log('MCP Client:', message),
-      onError: (error) => console.error('MCP Client Error:', error)
-    }), 
-  []);
-
-  // Extract tool calls from the LLM response
-  const extractToolCalls = (text) => {
-    const calls = [];
-    const regex = /CALL:\s*(\w+)\.(\w+)\(({.*?})\)/gs;
-    let match;
-    
-    while ((match = regex.exec(text)) !== null) {
-      try {
-        const server = match[1];
-        const capability = match[2];
-        const paramsJson = match[3];
-        const params = JSON.parse(paramsJson);
-        
-        calls.push({
-          server,
-          capability,
-          params
-        });
-      } catch (e) {
-        console.error('Error parsing tool call:', e);
-      }
-    }
-    
-    return calls;
-  };
-
+  // Handle key press
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -516,114 +528,125 @@ const ChatBox = ({ scheduleData }) => {
     }
   };
 
-  // Add this at the beginning of your component
-  const backendHasSchedule = useRef(false);
+  // Render hints for optimization queries
+  const renderHints = (message) => {
+    if (message.role === 'user' && 
+        message.content.toLowerCase().includes('optimize') && 
+        !message.content.toLowerCase().includes('lp')) {
+      return (
+        <div className="text-xs text-gray-500 mt-1 italic">
+          Tip: You can ask me to "optimize the schedule using LP" for advanced optimization
+        </div>
+      );
+    }
+    return null;
+  };
 
-  // Add this effect to check if backend has schedule data
+  // Add this effect to handle scroll detection
   useEffect(() => {
-    const checkServerStatus = async () => {
-      try {
-        const response = await fetch('http://localhost:5001/status');
-        if (response.ok) {
-          const data = await response.json();
-          backendHasSchedule.current = data.has_schedule_data;
-        }
-      } catch (error) {
-        console.error('Error checking server status:', error);
-      }
+    const container = chatContainerRef.current;
+    if (!container) return;
+    
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      // Show button when scrolled up more than 200px from bottom
+      const isScrolledUp = scrollHeight - scrollTop - clientHeight > 200;
+      setShowScrollButton(isScrolledUp);
     };
     
-    checkServerStatus();
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Add this function to handle manual scrolling
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="flex flex-col h-full">
-      <div className="bg-gray-100 p-4 border-b">
+    <div className="flex flex-col h-full" style={{ minHeight: "80vh" }}>
+      <div className="bg-gray-100 p-4 border-b flex justify-between items-center">
         <h2 className="text-lg font-semibold">Schedule Assistant</h2>
+        <div>
+          {backendHasSchedule ? (
+            <span className="text-sm bg-green-100 text-green-800 py-1 px-2 rounded-full flex items-center">
+              <span className="h-2 w-2 bg-green-500 rounded-full mr-1"></span>
+              AI Connected
+            </span>
+          ) : (
+            <span className="text-sm bg-yellow-100 text-yellow-800 py-1 px-2 rounded-full flex items-center">
+              <span className="h-2 w-2 bg-yellow-500 rounded-full mr-1"></span>
+              Local Mode
+            </span>
+          )}
+        </div>
       </div>
       
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div 
+        ref={chatContainerRef}
+        className="flex-1 overflow-y-auto p-4 space-y-4 relative" 
+        style={{ 
+          height: "calc(100% - 60px)",  // Adjust based on your input area height
+          overflowX: "hidden"  // Prevent horizontal scrolling
+        }}
+      >
         {messages.map((message, index) => (
           <div 
-            key={index} 
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            key={index}
+            className={`${
+              message.role === 'user' ? 'ml-auto bg-blue-100' : 'mr-auto bg-gray-100'
+            } rounded-lg p-3 max-w-[85%] break-words`}  // Add break-words to handle long text
           >
-            {message.role === 'assistant' && (
-              <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white mr-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 005 10a6 6 0 0012 0c0-.352-.035-.696-.1-1.03A5 5 0 0010 11z" clipRule="evenodd" />
-                </svg>
-              </div>
-            )}
-            
-            <div 
-              className={`rounded-lg px-4 py-2 max-w-[75%] ${
-                message.role === 'user' 
-                  ? 'bg-blue-500 text-white' 
-                  : message.error 
-                    ? 'bg-red-100 text-red-800 border border-red-300' 
-                    : 'bg-gray-100 text-gray-800 border border-gray-200'
-              }`}
-            >
-              <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-            </div>
-            
-            {message.role === 'user' && (
-              <div className="h-8 w-8 rounded-full bg-gray-600 flex items-center justify-center text-white ml-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                </svg>
-              </div>
-            )}
+            <p className="text-sm">{message.content}</p>
           </div>
         ))}
         
+        {/* Make sure the typing indicator has constraints */}
         {isTyping && (
-          <div className="flex justify-start">
-            <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white mr-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 005 10a6 6 0 0012 0c0-.352-.035-.696-.1-1.03A5 5 0 0010 11z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="rounded-lg px-4 py-2 bg-gray-100 text-gray-800 border border-gray-200">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce"></div>
-                <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-              </div>
+          <div className="mr-auto bg-gray-100 rounded-lg p-3 max-w-[85%]">
+            <div className="flex space-x-1">
+              <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce"></div>
+              <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce delay-75"></div>
+              <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce delay-150"></div>
             </div>
           </div>
         )}
         
         <div ref={messagesEndRef} />
+        
+        {/* Scroll to bottom button */}
+        {showScrollButton && (
+          <button
+            onClick={scrollToBottom}
+            className="absolute bottom-5 right-5 rounded-full bg-blue-500 text-white p-2 shadow-lg hover:bg-blue-600 transition-all"
+            aria-label="Scroll to bottom"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
+        )}
       </div>
       
       {/* Input area */}
-      <div className="p-4 border-t">
-        <div className="flex">
-          <textarea
-            className="flex-1 border rounded-l-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-            rows="2"
-            placeholder="Ask me about the schedule data..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-          ></textarea>
-          <button
-            className={`px-4 rounded-r-md ${
-              !input.trim() || isTyping
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-500 text-white hover:bg-blue-600'
-            }`}
-            onClick={handleSendMessage}
-            disabled={!input.trim() || isTyping}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-            </svg>
-          </button>
-        </div>
+      <div className="flex items-center p-3 border-t border-gray-200 h-[60px]">
+        {/* Fixed height input area */}
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+          placeholder="Ask me about the schedule..."
+          className="flex-1 px-3 py-2 border rounded-l-lg focus:outline-none"
+        />
+        <button
+          onClick={handleSendMessage}
+          className="bg-blue-500 text-gray-700 px-4 py-2 rounded-r-lg hover:bg-blue-600 transition"
+          disabled={isTyping || !input.trim()}
+        >
+          Send
+        </button>
       </div>
     </div>
   );

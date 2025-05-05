@@ -1,26 +1,22 @@
 import React from 'react';
-import Dashboard from './components/Dashboard.jsx';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-
-// Either create these components or remove them from the render
-// import NavBar from './components/NavBar.jsx';
-// import Footer from './components/Footer.jsx';
+import Dashboard from './components/Dashboard';
+import FeedstockDeliveryPage from './pages/FeedstockDeliveryPage';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Remove the NavBar and Footer until they're implemented */}
-      {/* <NavBar /> */}
-      
-      <main className="flex-1">
-        <Dashboard />
-      </main>
-      
-      {/* <Footer /> */}
-      
-      {/* Make sure react-hot-toast is installed */}
+    <Router>
+      <div className="min-h-screen bg-gray-100">
+        <main>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/feedstock" element={<FeedstockDeliveryPage />} />
+          </Routes>
+        </main>
+      </div>
       <Toaster position="top-right" />
-    </div>
+    </Router>
   );
 }
 

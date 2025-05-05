@@ -12,6 +12,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
+      '/mcp': {
+        target: 'http://localhost:5005',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/mcp/, '')
+      },
     },
   },
 })
